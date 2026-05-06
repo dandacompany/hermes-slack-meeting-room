@@ -17,6 +17,7 @@ REQUIRED_FILES = [
     "SKILL.md",
     "assets/hermes-meeting/SKILL.md",
     "assets/templates/profile-config-snippets.yaml",
+    "assets/templates/business-persona-presets.yaml",
     "assets/templates/channel-prompts.yaml",
     "assets/templates/tts-options.yaml",
     "references/distribution.md",

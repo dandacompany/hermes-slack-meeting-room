@@ -20,7 +20,7 @@ hermes skills check
 After publishing the repo:
 
 ```bash
-hermes skills install <owner>/<repo>/skills/hermes-slack-meeting-room
+hermes skills install dandacompany/hermes-slack-meeting-room/skills/hermes-slack-meeting-room
 ```
 
 Use this for early testers because it does not require adding a tap and preserves bundled `assets/`, `references/`, and `scripts/`.
@@ -32,9 +32,9 @@ Do not use a raw `SKILL.md` URL for this package. Hermes raw URL installs are si
 Use a GitHub tap when a team will install multiple skills from the same repository.
 
 ```bash
-hermes skills tap add <owner>/<repo>
+hermes skills tap add dandacompany/hermes-slack-meeting-room
 hermes skills search "hermes slack meeting"
-hermes skills install <identifier-shown-by-search>
+hermes skills install hermes-slack-meeting-room
 ```
 
 Expected repo layout:
@@ -53,7 +53,7 @@ skills/
 Hermes can create a GitHub PR for a skill source:
 
 ```bash
-hermes skills publish ./skills/hermes-slack-meeting-room --to github --repo <owner>/<repo>
+hermes skills publish ./skills/hermes-slack-meeting-room --to github --repo dandacompany/hermes-slack-meeting-room
 ```
 
 This requires GitHub authentication through `GITHUB_TOKEN` or `gh auth login`.

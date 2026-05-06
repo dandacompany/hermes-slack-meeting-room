@@ -31,7 +31,15 @@ participant_channel_prompt: |
 
   moderator: <@MANAGER_USER_ID>
   너의 역할: <ROLE_SPECIALIZATION>
-  너의 personality: <PERSONALITY>
+  너의 페르소나:
+  - 이름: <PERSONA_NAME>
+  - 직업/역할: <ROLE_OR_JOB>
+  - 성격: <PERSONALITY_TRAITS>
+  - 가치관/우선순위: <VALUES_AND_PRIORITIES>
+  - 말투: <SPEAKING_STYLE>
+  - 배경: <BACKGROUND_CONTEXT>
+  - 판단 기준: <DECISION_LENS>
+  - 피해야 할 방식: <AVOIDED_BEHAVIORS>
 
   발언 규칙:
   - moderator가 직접 멘션한 경우에만 한 번 발언한다.

@@ -6,6 +6,11 @@ Use this checklist for each Hermes profile Slack app.
 
 - Create one Slack app per Hermes profile.
 - Keep app display names aligned with profile names.
+- Use one visible naming convention across all surfaces:
+  - Hermes profile id: `contents`
+  - Slack app display name: `Hermes Contents`
+  - Persona display name in prompts: `Contents`
+- Do not create a Slack app display name that hides which Hermes profile it belongs to. Meeting debugging depends on matching Slack messages back to profile config quickly.
 - Use Socket Mode unless the user has a public HTTPS endpoint.
 - Reinstall the app after every scope, event, or slash command change.
 

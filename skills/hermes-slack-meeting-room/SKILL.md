@@ -24,7 +24,8 @@ Use this skill to guide a user from a fresh Hermes installation to a working Sla
 - Never print full Slack, Typecast, ElevenLabs, or provider tokens. Redact secrets in reports.
 - Prefer deterministic steps: copy templates, edit config files, run validation, restart services, and run smoke tests.
 - Treat Slack app creation, OAuth scopes, Socket Mode, app reinstall, token generation, slash command setup, and channel invitation as guided user actions.
-- Default to one base Manager profile plus three additional participant profiles, but make every profile name, role, personality, Slack app display name, channel policy, and TTS voice user-configurable.
+- Default to one base Manager profile plus three additional participant profiles, but make every profile name, role, persona, channel policy, and TTS voice user-configurable.
+- Keep each Hermes profile name, Slack app display name, and human-facing persona name intentionally aligned unless the user explicitly chooses an exception.
 - Edge TTS is the lowest-friction default. Also present Hermes built-in TTS providers discovered on the target install and Typecast voice candidates when available.
 
 ## Workflow
@@ -51,23 +52,56 @@ Required fields:
 
 - Base moderator profile name
 - Three additional profile names
+- Naming convention for each profile:
+  - Hermes profile id, for example `contents`
+  - Slack app display name, for example `Hermes Contents`
+  - Persona display name, for example `Contents`
+  - Default rule: keep these names recognizably identical across Hermes config, Slack app, and meeting prompts.
 - Each profile's role specialization
-- Each profile's personality and speaking style
-- Slack app display name for each profile
+- Each profile's persona card:
+  - Name
+  - Role/job
+  - Personality traits
+  - Values and priorities
+  - Speaking style and tone
+  - Background/context
+  - Decision lens
+  - Avoided behaviors or forbidden style
 - Meeting channel policy
 - TTS provider and voice for each profile
 
-Offer starter presets only if the user wants examples:
+Ask the user to customize these persona cards instead of forcing fixed presets. For business users, read `assets/templates/business-persona-presets.yaml` and offer either:
+
+- Recommended personas based on the user's meeting goal, industry, and deliverable
+- A short selectable list of built-in personas
+- Fully custom personas when the user already knows what they want
+
+Built-in business persona examples:
 
 | Preset | Use |
 | --- | --- |
-| Contents | Content, titles, scripts, audience hooks |
-| Critic | Dissent, risks, weak assumptions, anti-convergence |
-| Operator | Execution plan, checklists, validation |
-| Family | Daily-life, emotional cost, household decisions |
-| Economy | Cost, ROI, downside risk, metrics |
+| Manager | Facilitation, turn control, Socratic setup |
+| Marketer | Positioning, campaign, funnel, customer message |
+| Product | Product strategy, PRD, roadmap, prioritization |
+| Backend | API, database, reliability, security-sensitive architecture |
+| Frontend | UI implementation, state, accessibility, performance |
+| Designer | Brand, visual hierarchy, presentation polish |
+| UX | User flow, usability, onboarding, friction points |
+| QA | Test plans, regression, reproducible failure cases |
+| Researcher | Market/user research, evidence quality, assumptions |
+| Data | Metrics, dashboards, experiments, analytical caveats |
+| Planner | Business plans, proposals, operating plans |
+| Consultant | Executive framing, options, tradeoffs, recommendations |
+| Finance | Budget, ROI, valuation, downside risk, unit economics |
+| Sales | Pitch, objection handling, discovery, account strategy |
+| Success | Onboarding, retention, customer health, renewal |
+| Legal | Compliance, privacy, contracts, claims risk |
+| Security | Threat modeling, permissions, secrets, attack surface |
+| Ops | Process, SOP, ownership, repeatable operations |
+| People | Hiring, team health, feedback, org communication |
+| Contents | YouTube, scripts, tutorials, editorial strategy |
 
-Confirm the final matrix before file edits.
+Confirm the final matrix before file edits. The confirmation must show profile id, Slack app display name, persona name, role, speaking style, and TTS choice for every profile.
 
 ### 3. TTS Selection
 
@@ -112,6 +146,7 @@ Register `/meeting` only on the Manager/base app by default.
 Use bundled assets:
 
 - `assets/templates/profile-config-snippets.yaml`
+- `assets/templates/business-persona-presets.yaml`
 - `assets/templates/channel-prompts.yaml`
 - `assets/templates/tts-options.yaml`
 - `assets/hermes-meeting/SKILL.md`
