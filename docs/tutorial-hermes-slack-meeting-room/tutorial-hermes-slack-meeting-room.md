@@ -6,6 +6,10 @@
 
 `hermes-slack-meeting-room`은 Hermes skill입니다. 직접 Slack 앱을 대신 만들어 주는 플러그인이 아니라, 사용자가 꼭 Slack UI에서 해야 하는 작업은 체크리스트로 안내하고, Hermes 쪽 설정은 템플릿과 검증 명령으로 정리해 주는 설치 가이드형 skill입니다.
 
+이 skill 자체가 회의실 런타임 기능을 제공하는 것이 아닙니다. 목적은 Hermes Agent와 사용자가 함께 Slack 앱, Hermes profile, channel prompt, `/meeting` 등록 규칙, persona matrix, TTS 정책, 회의 운영 ground rules를 단계적으로 만들도록 돕는 것입니다.
+
+실제 회의 동작은 설정이 끝난 뒤의 Hermes profile, Slack gateway, 채널 프롬프트, slash command, 그리고 필요하면 설치되는 `hermes-meeting` moderator instruction이 담당합니다.
+
 기본 목표는 기존 Hermes 기본 프로필 1개에 회의 참여 프로필 3개를 추가하고, 각 프로필의 이름 체계, 페르소나, 허용 채널, TTS provider와 voice를 문답으로 정하는 것입니다.
 
 ## 2. 설치 전 확인
@@ -182,7 +186,31 @@ hermes --profile <profile-3> config check
 
 검증이 통과한 뒤에 gateway를 재시작합니다.
 
-## 9. 첫 Slack smoke test
+## 9. 회의 운영 ground rules
+
+`/meeting`은 단순히 여러 봇을 동시에 부르는 기능이 아니라, Manager가 회의 상태와 발언권을 관리하는 workflow입니다. 세부 규칙은 설치된 skill의 `references/meeting-ground-rules.md`에 들어 있습니다.
+
+핵심 규칙은 아래와 같습니다.
+
+| 영역 | 규칙 |
+| --- | --- |
+| setup gate | 사용자가 회의 설정을 승인하기 전에는 참여자를 멘션하지 않음 |
+| state block | routing, pause, resume, synthesis, decision마다 `[MEETING]` 상태 갱신 |
+| 발언권 | Manager만 발언권을 배정하고 participant는 직접 다른 앱을 멘션하지 않음 |
+| sequential | 한 번에 한 명만 호출하고, 답변 후 `handoff`로 Manager에게 반환 |
+| parallel | 여러 명을 한 번에 호출하되 서로 멘션하지 않고 `[PARALLEL-DONE]`으로 종료 |
+| 사용자 개입 | pause, stop, revise, answer, comment, direct로 분류한 뒤 라우팅 재설계 |
+| timeout/duplicate | 누락은 pending/missing으로 기록하고, 중복 답변은 첫 답변만 카운트 |
+| anti-convergence | 중간과 최종 전 dissent/risk/verification checkpoint를 강제 |
+| TTS | 메타데이터와 멘션은 읽지 않고 회의 본문만 음성화 |
+
+운영 규칙을 직접 확인하려면 아래 파일을 엽니다.
+
+```bash
+sed -n '1,260p' ~/.hermes/skills/hermes-slack-meeting-room/references/meeting-ground-rules.md
+```
+
+## 10. 첫 Slack smoke test
 
 처음에는 테스트 채널 하나에서 text-only로 확인합니다.
 
@@ -199,13 +227,15 @@ hermes --profile <profile-3> config check
 /meeting 테스트 회의, 3턴, text-only
 ```
 
-성공 기준은 네 가지입니다.
+성공 기준은 여섯 가지입니다.
 
 ```text
 1. Manager가 먼저 회의 설정을 확인한다.
 2. 사용자가 시작을 승인하기 전에는 참여자를 호출하지 않는다.
 3. sequential 모드에서 한 번에 한 프로필만 발언한다.
 4. participant는 발언 후 Manager에게 handoff한다.
+5. 사용자가 중간에 개입하면 routing을 멈추고 상태를 갱신한다.
+6. 중복/지연 답변이 와도 완료된 턴을 자동으로 다시 열지 않는다.
 ```
 
 텍스트 흐름이 통과하면 voice-summary를 테스트합니다.
@@ -216,7 +246,7 @@ hermes --profile <profile-3> config check
 
 이때 TTS가 `[MEETING]`, `handoff:`, `round`, `next`, Slack mention 같은 메타정보를 읽으면 안 됩니다.
 
-## 10. 자주 나는 오류
+## 11. 자주 나는 오류
 
 | 증상 | 먼저 볼 것 |
 | --- | --- |
@@ -225,6 +255,7 @@ hermes --profile <profile-3> config check
 | DMs only라고 뜸 | profile config의 `slack.dm_only: false` |
 | 봇이 채널 메시지를 못 봄 | 채널 초대, `message.channels`, `channels:history` |
 | 모든 프로필이 동시에 답함 | free-response 채널 정책과 participant prompt |
+| 중복/지연 답변으로 회의가 꼬임 | `meeting-ground-rules.md`의 timeout/duplicate handling |
 | TTS가 메타정보를 읽음 | `voice-summary`와 TTS 필터 규칙 |
 
 문제가 생기면 설치된 skill의 troubleshooting 문서를 먼저 엽니다.
@@ -233,7 +264,7 @@ hermes --profile <profile-3> config check
 sed -n '1,220p' ~/.hermes/skills/hermes-slack-meeting-room/references/troubleshooting.md
 ```
 
-## 11. 다음 단계
+## 12. 다음 단계
 
 첫 테스트가 통과하면 아래 순서로 확장합니다.
 

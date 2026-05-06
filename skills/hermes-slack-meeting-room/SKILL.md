@@ -1,6 +1,6 @@
 ---
 name: hermes-slack-meeting-room
-description: Guide users through setting up a Slack-Hermes multi-profile meeting room after Codex and Hermes Agent are installed. Use when the user wants /meeting, moderator-led multi-agent Slack meetings, profile/personality setup, Slack app checklists, Hermes profile config templates, or TTS voice selection for Hermes meetings.
+description: Guided setup skill for configuring Slack-Hermes multi-profile meeting rooms after Codex and Hermes Agent are installed. Use when the user wants step-by-step Slack app setup, Hermes profile conventions, /meeting moderator prompts, persona matrices, channel allowlists, or TTS policy guidance.
 version: 0.1.0
 author: Dante Labs
 license: MIT
@@ -17,6 +17,10 @@ metadata:
 
 Use this skill to guide a user from a fresh Hermes installation to a working Slack meeting room where one moderator profile coordinates several Hermes participant profiles.
 
+This skill is a setup and convention-building guide. It does not create Slack apps by itself, grant workspace permissions, run a gateway, or replace Hermes runtime configuration. Its job is to walk the agent and user through the decisions, checklists, templates, validation commands, and operating rules needed to configure Hermes and Slack correctly.
+
+The meeting behavior is produced by the configured Hermes profiles, Slack gateway settings, channel prompts, slash-command registration, and the optional `assets/hermes-meeting/SKILL.md` moderator instruction copied into the target Hermes install.
+
 ## Operating Rules
 
 - Start from this baseline: Codex is available, Hermes Agent is installed, one base Hermes profile can run, and the user has a Slack workspace.
@@ -24,6 +28,7 @@ Use this skill to guide a user from a fresh Hermes installation to a working Sla
 - Never print full Slack, Typecast, ElevenLabs, or provider tokens. Redact secrets in reports.
 - Prefer deterministic steps: copy templates, edit config files, run validation, restart services, and run smoke tests.
 - Treat Slack app creation, OAuth scopes, Socket Mode, app reinstall, token generation, slash command setup, and channel invitation as guided user actions.
+- Do not present this skill as a plugin or as a runtime feature provider. Present it as an onboarding workflow that produces configuration, prompts, conventions, and validation steps.
 - Default to one base Manager profile plus three additional participant profiles, but make every profile name, role, persona, channel policy, and TTS voice user-configurable.
 - Keep each Hermes profile name, Slack app display name, and human-facing persona name intentionally aligned unless the user explicitly chooses an exception.
 - Edge TTS is the lowest-friction default. Also present Hermes built-in TTS providers discovered on the target install and Typecast voice candidates when available.
@@ -141,7 +146,22 @@ For each profile-specific Slack app, guide the user through:
 
 Register `/meeting` only on the Manager/base app by default.
 
-### 5. Generate Templates
+### 5. Meeting Ground Rules
+
+Read `references/meeting-ground-rules.md` before generating channel prompts or testing `/meeting`.
+
+Ensure the generated Manager and participant prompts enforce:
+
+- Setup gate before participant mentions
+- Manager-only turn assignment
+- Sequential, parallel, directed, and mixed mode rules
+- Compact state block updates
+- User intervention classification
+- Timeout, duplicate, late answer, and off-protocol handling
+- Anti-convergence checkpoints
+- TTS metadata filtering
+
+### 6. Generate Templates
 
 Use bundled assets:
 
@@ -150,10 +170,11 @@ Use bundled assets:
 - `assets/templates/channel-prompts.yaml`
 - `assets/templates/tts-options.yaml`
 - `assets/hermes-meeting/SKILL.md`
+- `references/meeting-ground-rules.md`
 
 Replace placeholders with the confirmed profile matrix. Keep generated files in a staging folder first, then apply them to Hermes config paths only after user approval.
 
-### 6. Install Hermes Meeting Skill
+### 7. Install Hermes Meeting Skill
 
 Copy or merge `assets/hermes-meeting/SKILL.md` into:
 
@@ -163,7 +184,7 @@ Copy or merge `assets/hermes-meeting/SKILL.md` into:
 
 For profile-isolated installs, copy it into each profile's active skills directory if that Hermes version requires per-profile skills.
 
-### 7. Validate
+### 8. Validate
 
 Run the bundled validation script against the staged package or copied install:
 
@@ -187,7 +208,7 @@ hermes --profile <profile> config check
 
 Restart gateway services only after config validation passes.
 
-### 8. Slack Smoke Tests
+### 9. Slack Smoke Tests
 
 Test in a dedicated Slack channel first.
 
@@ -201,17 +222,21 @@ Test in a dedicated Slack channel first.
 
 4. Confirm the Manager asks setup questions before mentioning participants.
 5. Confirm sequential handoff works.
-6. Enable voice only after the text meeting passes:
+6. Confirm user intervention pauses routing and updates the state block.
+7. Confirm duplicate or late participant replies do not reopen completed turns.
+8. Enable voice only after the text meeting passes:
 
 ```text
 /meeting 테스트 회의, 3턴, voice-summary
 ```
 
-7. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
+9. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
 
 ## Troubleshooting
 
 Read `references/troubleshooting.md` when Slack says the app did not respond, `/meeting` is unknown, the app is configured for DMs only, a bot does not see the channel, or TTS speaks routing metadata.
+
+Read `references/meeting-ground-rules.md` when turn order, mentions, user intervention, parallel replies, duplicate replies, or meeting ending behavior is unclear.
 
 Read `references/plugin-boundary.md` if the user asks whether this should be a Hermes plugin instead of a skill.
 

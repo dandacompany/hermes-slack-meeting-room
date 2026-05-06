@@ -2,7 +2,7 @@
 
 Hermes Slack multi-profile meeting rooms can be hard to set up because the work crosses Hermes profiles, Slack apps, slash commands, gateway services, channel prompts, and TTS settings.
 
-This repository packages a Hermes skill that guides that setup as a workflow:
+This repository packages a Hermes setup/onboarding skill that guides that setup as a workflow:
 
 - Start after Codex and Hermes Agent are installed.
 - Assume one base Hermes profile already exists.
@@ -11,6 +11,14 @@ This repository packages a Hermes skill that guides that setup as a workflow:
 - Include built-in business persona presets such as Marketer, Product, Backend, Frontend, Designer, UX, QA, Researcher, Data, Planner, Consultant, Finance, Sales, Success, Legal, Security, Ops, People, and Contents.
 - Guide Slack UI steps that cannot be automated by a Hermes plugin.
 - Generate deterministic Hermes templates and validation commands.
+
+## Scope
+
+This skill is not the meeting-room runtime itself. It is a guided setup package that helps a Hermes Agent and the user create the required Slack apps, Hermes profiles, channel prompts, slash-command convention, persona matrix, TTS policy, and meeting ground rules.
+
+The actual meeting behavior comes from the configured Hermes profiles, Slack gateway settings, channel prompts, and the optional `hermes-meeting` moderator instruction copied into the target Hermes install.
+
+This package should therefore be judged by whether it gives the agent a deterministic setup path, clear user checklists, reusable templates, and consistent operating conventions.
 
 ## Install
 
@@ -47,6 +55,7 @@ skills/hermes-slack-meeting-room/
       business-persona-presets.yaml
   references/
     distribution.md
+    meeting-ground-rules.md
     plugin-boundary.md
     slack-checklist.md
     troubleshooting.md

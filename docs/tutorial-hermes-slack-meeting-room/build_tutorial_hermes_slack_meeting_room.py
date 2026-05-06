@@ -79,14 +79,15 @@ SECTIONS = [
     {
         "num": "01",
         "title": "무엇을 설치하는가",
-        "lede": "이 skill은 Slack 앱을 대신 만드는 플러그인이 아니라, 사용자가 해야 할 Slack UI 작업과 Codex가 처리할 Hermes 설정 작업을 분리하는 가이드입니다.",
+        "lede": "이 skill은 Slack 앱을 대신 만드는 플러그인이나 회의실 런타임이 아니라, 사용자가 해야 할 Slack UI 작업과 Codex가 처리할 Hermes 설정 작업을 분리하는 setup guide입니다.",
         "blocks": [
             design_block(
                 "01-1. 구조",
-                "기본 프로필 하나에서 시작해 참여 프로필 3개를 추가하고, 회의실을 단계적으로 검증한다.",
+                "기본 프로필 하나에서 시작해 참여 프로필 3개를 추가할 수 있도록 설정, 컨벤션, 프롬프트, 검증 절차를 단계적으로 만든다.",
                 [
                     "Slack 앱 생성과 권한 부여는 체크리스트로 안내한다.",
                     "Hermes 설정은 템플릿과 검증 명령으로 결정론적으로 처리한다.",
+                    "회의 동작은 설정된 Hermes profile, Slack gateway, channel prompt, moderator instruction이 담당한다.",
                     "TTS는 text-only 통과 후 voice-summary부터 확장한다.",
                 ],
                 [
@@ -289,11 +290,37 @@ hermes --profile <profile-3> config check
     },
     {
         "num": "08",
+        "title": "회의 운영 ground rules",
+        "lede": "`/meeting`은 여러 봇을 동시에 부르는 기능이 아니라, Manager가 상태와 발언권을 관리하는 workflow입니다.",
+        "blocks": [
+            table(
+                [
+                    ("setup gate", "사용자가 회의 설정을 승인하기 전에는 참여자를 멘션하지 않음"),
+                    ("state block", "routing, pause, resume, synthesis, decision마다 [MEETING] 상태 갱신"),
+                    ("발언권", "Manager만 발언권을 배정하고 participant는 직접 다른 앱을 멘션하지 않음"),
+                    ("sequential", "한 번에 한 명만 호출하고, 답변 후 handoff로 Manager에게 반환"),
+                    ("parallel", "여러 명을 한 번에 호출하되 서로 멘션하지 않고 [PARALLEL-DONE]으로 종료"),
+                    ("사용자 개입", "pause, stop, revise, answer, comment, direct로 분류한 뒤 라우팅 재설계"),
+                    ("timeout/duplicate", "누락은 pending/missing으로 기록하고, 중복 답변은 첫 답변만 카운트"),
+                    ("anti-convergence", "중간과 최종 전 dissent/risk/verification checkpoint를 강제"),
+                    ("TTS", "메타데이터와 멘션은 읽지 않고 회의 본문만 음성화"),
+                ],
+                ("영역", "규칙"),
+            ),
+            code_block(
+                "08-1. Ground rules reference",
+                "sed -n '1,260p' ~/.hermes/skills/hermes-slack-meeting-room/references/meeting-ground-rules.md",
+                "bash",
+            ),
+        ],
+    },
+    {
+        "num": "09",
         "title": "첫 Slack smoke test",
         "lede": "처음에는 text-only로 meeting flow만 확인합니다. TTS는 routing이 안정화된 뒤 켭니다.",
         "blocks": [
             code_block(
-                "08-1. Invite apps",
+                "09-1. Invite apps",
                 """
 /invite @Hermes Manager
 /invite @Hermes Contents
@@ -302,13 +329,15 @@ hermes --profile <profile-3> config check
                 """,
                 "text",
             ),
-            code_block("08-2. Text meeting", "/meeting 테스트 회의, 3턴, text-only", "text"),
-            code_block("08-3. Voice summary meeting", "/meeting 테스트 회의, 3턴, voice-summary", "text"),
+            code_block("09-2. Text meeting", "/meeting 테스트 회의, 3턴, text-only", "text"),
+            code_block("09-3. Voice summary meeting", "/meeting 테스트 회의, 3턴, voice-summary", "text"),
             table(
                 [
                     ("설정 확인", "Manager가 먼저 회의 설정을 묻는다"),
                     ("승인 전 대기", "사용자가 시작하기 전에는 참여자를 호출하지 않는다"),
                     ("순차 발언", "한 번에 한 프로필만 발언한다"),
+                    ("사용자 개입", "중간 개입 시 routing을 멈추고 상태를 갱신한다"),
+                    ("중복/지연 답변", "완료된 턴을 자동으로 다시 열지 않는다"),
                     ("TTS 필터", "[MEETING], handoff, mention을 읽지 않는다"),
                 ],
                 ("성공 기준", "확인 내용"),
@@ -316,7 +345,7 @@ hermes --profile <profile-3> config check
         ],
     },
     {
-        "num": "09",
+        "num": "10",
         "title": "오류가 날 때",
         "lede": "대부분의 실패는 Slack app 설정, gateway 상태, command 등록 위치, TTS metadata 분리 중 하나에서 생깁니다.",
         "blocks": [
@@ -327,12 +356,13 @@ hermes --profile <profile-3> config check
                     ("DMs only", "`slack.dm_only: false` 확인"),
                     ("채널 메시지를 못 봄", "채널 초대, events, history scopes 확인"),
                     ("모든 프로필 동시 응답", "free-response channel과 participant prompt 확인"),
+                    ("중복/지연 답변으로 회의가 꼬임", "`meeting-ground-rules.md`의 timeout/duplicate handling 확인"),
                     ("TTS가 metadata를 읽음", "`voice-summary`와 TTS 필터 규칙 확인"),
                 ],
                 ("증상", "먼저 볼 곳"),
             ),
             code_block(
-                "09-1. Troubleshooting reference",
+                "10-1. Troubleshooting reference",
                 "sed -n '1,220p' ~/.hermes/skills/hermes-slack-meeting-room/references/troubleshooting.md",
                 "bash",
             ),
@@ -595,7 +625,9 @@ def body() -> str:
 
 
 def main() -> None:
-    OUT.write_text(HEAD + body(), encoding="utf-8")
+    html_text = HEAD + body()
+    html_text = "\n".join(line.rstrip() for line in html_text.splitlines()) + "\n"
+    OUT.write_text(html_text, encoding="utf-8")
     print(f"Wrote {OUT} ({OUT.stat().st_size} bytes)")
 
 

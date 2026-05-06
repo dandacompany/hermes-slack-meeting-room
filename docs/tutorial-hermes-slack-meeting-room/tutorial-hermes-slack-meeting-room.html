@@ -224,31 +224,32 @@
     </div>
   </header>
   <main class="container">
-    
+
     <section class="step" id="step-01">
       <div class="section-num">STEP 01</div>
       <h2>무엇을 설치하는가</h2>
-      <p class="lede">이 skill은 Slack 앱을 대신 만드는 플러그인이 아니라, 사용자가 해야 할 Slack UI 작업과 Codex가 처리할 Hermes 설정 작업을 분리하는 가이드입니다.</p>
-      
+      <p class="lede">이 skill은 Slack 앱을 대신 만드는 플러그인이나 회의실 런타임이 아니라, 사용자가 해야 할 Slack UI 작업과 Codex가 처리할 Hermes 설정 작업을 분리하는 setup guide입니다.</p>
+
     <section class="design-block">
       <div class="block-label">01-1. 구조</div>
-      <p class="goal">기본 프로필 하나에서 시작해 참여 프로필 3개를 추가하고, 회의실을 단계적으로 검증한다.</p>
+      <p class="goal">기본 프로필 하나에서 시작해 참여 프로필 3개를 추가할 수 있도록 설정, 컨벤션, 프롬프트, 검증 절차를 단계적으로 만든다.</p>
       <ol class="principles"><li><span>01</span><p>Slack 앱 생성과 권한 부여는 체크리스트로 안내한다.</p></li>
 <li><span>02</span><p>Hermes 설정은 템플릿과 검증 명령으로 결정론적으로 처리한다.</p></li>
-<li><span>03</span><p>TTS는 text-only 통과 후 voice-summary부터 확장한다.</p></li></ol>
+<li><span>03</span><p>회의 동작은 설정된 Hermes profile, Slack gateway, channel prompt, moderator instruction이 담당한다.</p></li>
+<li><span>04</span><p>TTS는 text-only 통과 후 voice-summary부터 확장한다.</p></li></ol>
       <div class="component-grid"><article><strong>Setup Coach</strong><p>프로필/Slack 앱 이름 체계, persona card, voice를 문답으로 확정</p></article>
 <article><strong>Template Builder</strong><p>profile config, channel prompt, meeting skill 템플릿 적용</p></article>
 <article><strong>Validator</strong><p>placeholder, YAML, token pattern, Hermes config 상태 점검</p></article></div>
     </section>
-    
+
     </section>
-    
+
 
     <section class="step" id="step-02">
       <div class="section-num">STEP 02</div>
       <h2>설치 전 상태 확인</h2>
       <p class="lede">Hermes 기본 설치가 흔들리면 Slack 회의실 설정도 같이 흔들립니다. skill 설치 전에 기본 상태부터 확인합니다.</p>
-      
+
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
@@ -260,21 +261,21 @@ hermes config check
 hermes profile list
 hermes skills list</code></pre>
     </div>
-    
+
 
     <aside class="note-block">
       <div class="block-label">02-2. 판단 기준</div>
       <p>`hermes config check`가 실패하면 profile이나 Slack 설정을 시작하지 말고 Hermes 기본 설정을 먼저 고칩니다.</p>
     </aside>
-    
+
     </section>
-    
+
 
     <section class="step" id="step-03">
       <div class="section-num">STEP 03</div>
       <h2>skill 설치</h2>
       <p class="lede">이 패키지는 multi-file skill입니다. raw SKILL.md URL 설치는 부속 파일을 가져오지 못하므로 GitHub identifier 또는 tap 방식으로 설치합니다.</p>
-      
+
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
@@ -282,7 +283,7 @@ hermes skills list</code></pre>
       </div>
       <pre><code class="language-bash">hermes skills install dandacompany/hermes-slack-meeting-room/skills/hermes-slack-meeting-room</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
@@ -293,7 +294,7 @@ hermes skills list</code></pre>
 hermes skills search &quot;hermes slack meeting&quot;
 hermes skills install hermes-slack-meeting-room</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
@@ -304,15 +305,15 @@ hermes skills install hermes-slack-meeting-room</code></pre>
 cp -R skills/hermes-slack-meeting-room/* ~/.hermes/skills/hermes-slack-meeting-room/
 hermes skills check</code></pre>
     </div>
-    
+
     </section>
-    
+
 
     <section class="step" id="step-04">
       <div class="section-num">STEP 04</div>
       <h2>설치 확인</h2>
       <p class="lede">Hermes가 skill을 읽는지 확인하고, 패키지 내부 파일과 템플릿이 빠지지 않았는지 검증합니다.</p>
-      
+
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
@@ -321,7 +322,7 @@ hermes skills check</code></pre>
       <pre><code class="language-bash">hermes skills list
 hermes skills check</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
@@ -330,7 +331,7 @@ hermes skills check</code></pre>
       </div>
       <pre><code class="language-bash">python3 ~/.hermes/skills/hermes-slack-meeting-room/scripts/validate_setup.py ~/.hermes/skills/hermes-slack-meeting-room</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
@@ -339,15 +340,15 @@ hermes skills check</code></pre>
       </div>
       <pre><code class="language-text">Validation passed: /home/you/.hermes/skills/hermes-slack-meeting-room</code></pre>
     </div>
-    
+
     </section>
-    
+
 
     <section class="step" id="step-05">
       <div class="section-num">STEP 05</div>
       <h2>사용 시작</h2>
       <p class="lede">Hermes 대화에서 skill을 명시적으로 불러 setup workflow를 시작합니다. 이 단계에서는 YAML을 먼저 편집하지 않고 profile matrix를 만듭니다.</p>
-      
+
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
@@ -355,7 +356,7 @@ hermes skills check</code></pre>
       </div>
       <pre><code class="language-bash">hermes -s hermes-slack-meeting-room</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
@@ -365,7 +366,7 @@ hermes skills check</code></pre>
       <pre><code class="language-text">hermes-slack-meeting-room skill을 사용해서 Slack 멀티프로필 회의실을 설정해줘.
 기본 프로필 하나는 이미 있고, 회의 참여 프로필 3개를 추가하고 싶어.</code></pre>
     </div>
-    
+
 
     <table>
       <thead><tr><th>결정 항목</th><th>권장 시작점</th></tr></thead>
@@ -379,13 +380,13 @@ hermes skills check</code></pre>
 <tr><td>TTS</td><td>Edge TTS 기본, Hermes built-in provider와 Typecast 후보 선택 가능</td></tr>
 <tr><td>Channel policy</td><td>처음에는 테스트 채널 1개만 허용</td></tr></tbody>
     </table>
-    
+
 
     <aside class="note-block">
       <div class="block-label">05-3. Business persona catalog</div>
       <p>`assets/templates/business-persona-presets.yaml`에는 비즈니스 회의용 built-in persona가 들어 있습니다. 사용자는 목록에서 고르거나, 회의 목적과 산출물을 말해 추천을 받을 수 있습니다.</p>
     </aside>
-    
+
 
     <table>
       <thead><tr><th>프리셋</th><th>적합한 회의</th></tr></thead>
@@ -410,15 +411,15 @@ hermes skills check</code></pre>
 <tr><td>People</td><td>채용, 팀 건강, 피드백, 조직 커뮤니케이션</td></tr>
 <tr><td>Contents</td><td>유튜브, 스크립트, 튜토리얼, 편집 전략</td></tr></tbody>
     </table>
-    
+
     </section>
-    
+
 
     <section class="step" id="step-06">
       <div class="section-num">STEP 06</div>
       <h2>Slack에서 해야 할 일</h2>
       <p class="lede">Slack 앱 생성, scope, Socket Mode, reinstall, 채널 초대는 plugin으로 대신 끝낼 수 없습니다. skill은 이 부분을 체크리스트로 안내합니다.</p>
-      
+
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
@@ -431,21 +432,21 @@ Events: app_mention, message.channels, message.im
 Reinstall to Workspace: scope/event/command 변경 뒤 반드시 실행
 Channel invite: 회의 채널에 모든 Hermes app 초대</code></pre>
     </div>
-    
+
 
     <aside class="note-block">
       <div class="block-label">06-2. /meeting command</div>
       <p>`/meeting`은 Manager 앱 하나에만 등록합니다. 여러 앱에 같은 slash command를 등록하면 어느 앱이 받는지 불명확해집니다.</p>
     </aside>
-    
+
     </section>
-    
+
 
     <section class="step" id="step-07">
       <div class="section-num">STEP 07</div>
       <h2>Hermes 설정 적용</h2>
       <p class="lede">문답이 끝나면 skill은 bundled template을 사용해 profile config, channel prompt, meeting skill 설치 계획을 만듭니다.</p>
-      
+
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
@@ -456,7 +457,7 @@ assets/templates/channel-prompts.yaml
 assets/templates/tts-options.yaml
 assets/hermes-meeting/SKILL.md</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
@@ -468,67 +469,99 @@ hermes --profile &lt;profile-1&gt; config check
 hermes --profile &lt;profile-2&gt; config check
 hermes --profile &lt;profile-3&gt; config check</code></pre>
     </div>
-    
+
 
     <aside class="note-block">
       <div class="block-label">07-3. Placeholder rule</div>
       <p>`<MEETING_CHANNEL_ID>`, `<@MANAGER_USER_ID>`, `<ROLE_SPECIALIZATION>`, `<TYPECAST_VOICE_ID>` 같은 placeholder가 남아 있으면 gateway를 재시작하지 않습니다.</p>
     </aside>
-    
+
     </section>
-    
+
 
     <section class="step" id="step-08">
       <div class="section-num">STEP 08</div>
-      <h2>첫 Slack smoke test</h2>
-      <p class="lede">처음에는 text-only로 meeting flow만 확인합니다. TTS는 routing이 안정화된 뒤 켭니다.</p>
-      
+      <h2>회의 운영 ground rules</h2>
+      <p class="lede">`/meeting`은 여러 봇을 동시에 부르는 기능이 아니라, Manager가 상태와 발언권을 관리하는 workflow입니다.</p>
+
+    <table>
+      <thead><tr><th>영역</th><th>규칙</th></tr></thead>
+      <tbody><tr><td>setup gate</td><td>사용자가 회의 설정을 승인하기 전에는 참여자를 멘션하지 않음</td></tr>
+<tr><td>state block</td><td>routing, pause, resume, synthesis, decision마다 [MEETING] 상태 갱신</td></tr>
+<tr><td>발언권</td><td>Manager만 발언권을 배정하고 participant는 직접 다른 앱을 멘션하지 않음</td></tr>
+<tr><td>sequential</td><td>한 번에 한 명만 호출하고, 답변 후 handoff로 Manager에게 반환</td></tr>
+<tr><td>parallel</td><td>여러 명을 한 번에 호출하되 서로 멘션하지 않고 [PARALLEL-DONE]으로 종료</td></tr>
+<tr><td>사용자 개입</td><td>pause, stop, revise, answer, comment, direct로 분류한 뒤 라우팅 재설계</td></tr>
+<tr><td>timeout/duplicate</td><td>누락은 pending/missing으로 기록하고, 중복 답변은 첫 답변만 카운트</td></tr>
+<tr><td>anti-convergence</td><td>중간과 최종 전 dissent/risk/verification checkpoint를 강제</td></tr>
+<tr><td>TTS</td><td>메타데이터와 멘션은 읽지 않고 회의 본문만 음성화</td></tr></tbody>
+    </table>
+
+
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
-        <span>08-1. Invite apps</span>
+        <span>08-1. Ground rules reference</span>
+      </div>
+      <pre><code class="language-bash">sed -n &#x27;1,260p&#x27; ~/.hermes/skills/hermes-slack-meeting-room/references/meeting-ground-rules.md</code></pre>
+    </div>
+
+    </section>
+
+
+    <section class="step" id="step-09">
+      <div class="section-num">STEP 09</div>
+      <h2>첫 Slack smoke test</h2>
+      <p class="lede">처음에는 text-only로 meeting flow만 확인합니다. TTS는 routing이 안정화된 뒤 켭니다.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span>09-1. Invite apps</span>
       </div>
       <pre><code class="language-text">/invite @Hermes Manager
 /invite @Hermes Contents
 /invite @Hermes Critic
 /invite @Hermes Operator</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
-        <span>08-2. Text meeting</span>
+        <span>09-2. Text meeting</span>
       </div>
       <pre><code class="language-text">/meeting 테스트 회의, 3턴, text-only</code></pre>
     </div>
-    
+
 
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
-        <span>08-3. Voice summary meeting</span>
+        <span>09-3. Voice summary meeting</span>
       </div>
       <pre><code class="language-text">/meeting 테스트 회의, 3턴, voice-summary</code></pre>
     </div>
-    
+
 
     <table>
       <thead><tr><th>성공 기준</th><th>확인 내용</th></tr></thead>
       <tbody><tr><td>설정 확인</td><td>Manager가 먼저 회의 설정을 묻는다</td></tr>
 <tr><td>승인 전 대기</td><td>사용자가 시작하기 전에는 참여자를 호출하지 않는다</td></tr>
 <tr><td>순차 발언</td><td>한 번에 한 프로필만 발언한다</td></tr>
+<tr><td>사용자 개입</td><td>중간 개입 시 routing을 멈추고 상태를 갱신한다</td></tr>
+<tr><td>중복/지연 답변</td><td>완료된 턴을 자동으로 다시 열지 않는다</td></tr>
 <tr><td>TTS 필터</td><td>[MEETING], handoff, mention을 읽지 않는다</td></tr></tbody>
     </table>
-    
-    </section>
-    
 
-    <section class="step" id="step-09">
-      <div class="section-num">STEP 09</div>
+    </section>
+
+
+    <section class="step" id="step-10">
+      <div class="section-num">STEP 10</div>
       <h2>오류가 날 때</h2>
       <p class="lede">대부분의 실패는 Slack app 설정, gateway 상태, command 등록 위치, TTS metadata 분리 중 하나에서 생깁니다.</p>
-      
+
     <table>
       <thead><tr><th>증상</th><th>먼저 볼 곳</th></tr></thead>
       <tbody><tr><td>앱이 반응하지 않음</td><td>gateway 상태, Socket Mode, app token, reinstall</td></tr>
@@ -536,20 +569,21 @@ hermes --profile &lt;profile-3&gt; config check</code></pre>
 <tr><td>DMs only</td><td>`slack.dm_only: false` 확인</td></tr>
 <tr><td>채널 메시지를 못 봄</td><td>채널 초대, events, history scopes 확인</td></tr>
 <tr><td>모든 프로필 동시 응답</td><td>free-response channel과 participant prompt 확인</td></tr>
+<tr><td>중복/지연 답변으로 회의가 꼬임</td><td>`meeting-ground-rules.md`의 timeout/duplicate handling 확인</td></tr>
 <tr><td>TTS가 metadata를 읽음</td><td>`voice-summary`와 TTS 필터 규칙 확인</td></tr></tbody>
     </table>
-    
+
 
     <div class="code-block">
       <div class="code-header">
         <span class="dots"><i></i><i></i><i></i></span>
-        <span>09-1. Troubleshooting reference</span>
+        <span>10-1. Troubleshooting reference</span>
       </div>
       <pre><code class="language-bash">sed -n &#x27;1,220p&#x27; ~/.hermes/skills/hermes-slack-meeting-room/references/troubleshooting.md</code></pre>
     </div>
-    
+
     </section>
-    
+
   </main>
   <footer>
     <p>Raw SKILL.md URL은 단일 파일 설치용입니다. 이 패키지는 GitHub identifier 또는 tap 방식으로 설치합니다.</p>
