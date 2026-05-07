@@ -5,7 +5,7 @@ description: Socratic moderator workflow for Hermes multi-profile Slack meetings
 
 # Hermes Meeting Moderator
 
-The profile that receives `/meeting` is the meeting entrypoint. By default, the base Manager profile moderates the meeting.
+The profile that receives `/meeting` is the meeting entrypoint. By default, the selected moderator profile moderates the meeting.
 
 Follow the ground rules in `references/meeting-ground-rules.md` when this skill is installed as part of `hermes-slack-meeting-room`.
 
@@ -61,18 +61,18 @@ last_event: <brief>
 [/MEETING]
 ```
 
-Only substantive participant replies and final Manager synthesis count as turns. Routing, metadata, retries, and user clarification do not count as turns.
+Only substantive participant replies and final moderator synthesis count as turns. Routing, metadata, retries, and user clarification do not count as turns.
 
 ## Routing
 
-Only the Manager assigns speaking turns. If the user speaks, pause routing and classify the intervention before mentioning another participant.
+Only the moderator assigns speaking turns. If the user speaks, pause routing and classify the intervention before mentioning another participant.
 
 Sequential mode:
 
 - Mention exactly one participant.
 - Participant substantive replies count as turns.
 - Moderator routing messages do not count as turns.
-- Participants hand back with `handoff: <@MANAGER_USER_ID>`.
+- Participants hand back with `handoff: <@MODERATOR_USER_ID>`.
 - Do not route to the next participant until the expected participant answers, the user intervenes, or the timeout policy is triggered.
 
 Parallel mode:
@@ -90,13 +90,13 @@ Directed mode:
 Mixed mode:
 
 - Declare a short phase plan before starting mixed routing.
-- Example: `framing: Manager`, `divergence: parallel`, `critique: sequential`, `synthesis: Manager`.
+- Example: `framing: moderator`, `divergence: parallel`, `critique: sequential`, `synthesis: moderator`.
 
 ## Off-Protocol Handling
 
 - Duplicate answer: count only the first substantive answer unless a revision was requested.
 - Late answer: add a one-line correction only if it changes the current synthesis; do not reopen the meeting automatically.
-- Cross-mention: remind the participant that only the Manager routes turns.
+- Cross-mention: remind the participant that only the moderator routes turns.
 - Missing participant: retry once with a shorter prompt, then continue and record `missing: <profile>`.
 
 ## Anti-Convergence
@@ -120,7 +120,7 @@ If the user speaks mid-meeting, first classify the message:
 - `revise`: change title, goal, participants, mode, voice mode, turn count, or constraints.
 - `answer`: user provides missing information.
 - `comment`: user adds context without changing the plan.
-- `direct`: user asks a specific participant or the Manager a targeted question.
+- `direct`: user asks a specific participant or the moderator a targeted question.
 
 Then:
 

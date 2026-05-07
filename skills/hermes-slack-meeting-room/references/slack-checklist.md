@@ -61,7 +61,7 @@ Turn on App Home messages and allow users to send messages to the app. This is r
 
 ## Slash Commands
 
-Register `/meeting` only on the Manager/base app by default.
+Register `/meeting` only on the moderator app by default.
 
 ```text
 Command: /meeting
@@ -87,7 +87,7 @@ SLACK_HOME_CHANNEL=<OPTIONAL_HOME_CHANNEL_ID>
 In the Slack meeting test channel:
 
 ```text
-/invite @Hermes Manager
+/invite @<MODERATOR_APP_NAME>
 /invite @<Profile 1 App>
 /invite @<Profile 2 App>
 /invite @<Profile 3 App>

@@ -23,10 +23,10 @@ Likely causes:
 Likely causes:
 
 - `/meeting` was registered on a different Slack app.
-- Manager app was not reinstalled after command registration.
+- Moderator app was not reinstalled after command registration.
 - The user is invoking `/meeting` in a workspace where that command is owned by another app.
 
-Default fix: register `/meeting` only on the Manager/base app and reinstall it.
+Default fix: register `/meeting` only on the moderator app and reinstall it.
 
 ## App is configured for DMs only
 
@@ -53,11 +53,11 @@ Check:
 
 ## Every profile answers at once
 
-Use Manager-led routing:
+Use moderator-led routing:
 
-- Participants answer only when directly mentioned by the Manager.
+- Participants answer only when directly mentioned by the moderator.
 - Participants do not mention each other.
-- Participants return to the Manager with `handoff: <@MANAGER_USER_ID>` in sequential mode.
+- Participants return to the moderator with `handoff: <@MODERATOR_USER_ID>` in sequential mode.
 - Free-response channels should be limited to trusted test/meeting channels.
 
 ## TTS reads metadata

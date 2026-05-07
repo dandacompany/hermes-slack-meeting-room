@@ -1,6 +1,6 @@
 # Merge these snippets into each Hermes profile config.yaml.
 
-manager_profile:
+moderator_profile:
   slack:
     dm_only: false
     require_mention: true
@@ -11,7 +11,7 @@ manager_profile:
       - "<MEETING_CHANNEL_ID>"
     channel_prompts:
       "<MEETING_CHANNEL_ID>": |
-        <PASTE_MANAGER_CHANNEL_PROMPT>
+        <PASTE_MODERATOR_CHANNEL_PROMPT>
   platforms:
     slack:
       reply_in_thread: false

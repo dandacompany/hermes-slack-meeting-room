@@ -191,7 +191,7 @@ hermes-slack-meeting-room skill을 사용해서 Slack 멀티프로필 회의실�
             ),
             table(
                 [
-                    ("Moderator", "기존 base profile 또는 Manager profile"),
+                    ("Moderator", "기존 base profile 또는 진행자 profile"),
                     ("Participants", "기본 3개, profile id와 Slack 앱명을 일원화하고 persona는 사용자 문답으로 결정"),
                     ("Hermes profile id", "`contents`, `critic`, `operator`처럼 config에서 쓰는 짧은 id"),
                     ("Slack app display name", "`Hermes Contents`처럼 profile id를 바로 알아볼 수 있는 앱 이름"),
@@ -209,7 +209,7 @@ hermes-slack-meeting-room skill을 사용해서 Slack 멀티프로필 회의실�
             ),
             table(
                 [
-                    ("Manager", "진행, 턴 제어, 소크라테스식 설정"),
+                    ("Moderator", "진행, 턴 제어, 소크라테스식 설정"),
                     ("Marketer", "포지셔닝, 캠페인, 퍼널, 고객 메시지"),
                     ("Product", "PRD, 로드맵, MVP, 우선순위"),
                     ("Backend", "API, 데이터베이스, 안정성, 보안성 있는 아키텍처"),
@@ -253,7 +253,7 @@ Channel invite: 회의 채널에 모든 Hermes app 초대
             ),
             note_block(
                 "06-2. /meeting command",
-                "`/meeting`은 Manager 앱 하나에만 등록합니다. 여러 앱에 같은 slash command를 등록하면 어느 앱이 받는지 불명확해집니다.",
+                "`/meeting`은 진행자 앱 하나에만 등록합니다. 여러 앱에 같은 slash command를 등록하면 어느 앱이 받는지 불명확해집니다.",
             ),
         ],
     },
@@ -284,21 +284,21 @@ hermes --profile <profile-3> config check
             ),
             note_block(
                 "07-3. Placeholder rule",
-                "`<MEETING_CHANNEL_ID>`, `<@MANAGER_USER_ID>`, `<ROLE_SPECIALIZATION>`, `<TYPECAST_VOICE_ID>` 같은 placeholder가 남아 있으면 gateway를 재시작하지 않습니다.",
+                "`<MEETING_CHANNEL_ID>`, `<@MODERATOR_USER_ID>`, `<ROLE_SPECIALIZATION>`, `<TYPECAST_VOICE_ID>` 같은 placeholder가 남아 있으면 gateway를 재시작하지 않습니다.",
             ),
         ],
     },
     {
         "num": "08",
         "title": "회의 운영 ground rules",
-        "lede": "`/meeting`은 여러 봇을 동시에 부르는 기능이 아니라, Manager가 상태와 발언권을 관리하는 workflow입니다.",
+        "lede": "`/meeting`은 여러 봇을 동시에 부르는 기능이 아니라, 진행자 프로필이 상태와 발언권을 관리하는 workflow입니다.",
         "blocks": [
             table(
                 [
                     ("setup gate", "사용자가 회의 설정을 승인하기 전에는 참여자를 멘션하지 않음"),
                     ("state block", "routing, pause, resume, synthesis, decision마다 [MEETING] 상태 갱신"),
-                    ("발언권", "Manager만 발언권을 배정하고 participant는 직접 다른 앱을 멘션하지 않음"),
-                    ("sequential", "한 번에 한 명만 호출하고, 답변 후 handoff로 Manager에게 반환"),
+                    ("발언권", "진행자만 발언권을 배정하고 participant는 직접 다른 앱을 멘션하지 않음"),
+                    ("sequential", "한 번에 한 명만 호출하고, 답변 후 handoff로 진행자에게 반환"),
                     ("parallel", "여러 명을 한 번에 호출하되 서로 멘션하지 않고 [PARALLEL-DONE]으로 종료"),
                     ("사용자 개입", "pause, stop, revise, answer, comment, direct로 분류한 뒤 라우팅 재설계"),
                     ("timeout/duplicate", "누락은 pending/missing으로 기록하고, 중복 답변은 첫 답변만 카운트"),
@@ -322,7 +322,7 @@ hermes --profile <profile-3> config check
             code_block(
                 "09-1. Invite apps",
                 """
-/invite @Hermes Manager
+/invite @<MODERATOR_APP_NAME>
 /invite @Hermes Contents
 /invite @Hermes Critic
 /invite @Hermes Operator
@@ -333,7 +333,7 @@ hermes --profile <profile-3> config check
             code_block("09-3. Voice summary meeting", "/meeting 테스트 회의, 3턴, voice-summary", "text"),
             table(
                 [
-                    ("설정 확인", "Manager가 먼저 회의 설정을 묻는다"),
+                    ("설정 확인", "진행자가 먼저 회의 설정을 묻는다"),
                     ("승인 전 대기", "사용자가 시작하기 전에는 참여자를 호출하지 않는다"),
                     ("순차 발언", "한 번에 한 프로필만 발언한다"),
                     ("사용자 개입", "중간 개입 시 routing을 멈추고 상태를 갱신한다"),
@@ -352,7 +352,7 @@ hermes --profile <profile-3> config check
             table(
                 [
                     ("앱이 반응하지 않음", "gateway 상태, Socket Mode, app token, reinstall"),
-                    ("Unknown command", "`/meeting`이 Manager app에 등록됐는지 확인"),
+                    ("Unknown command", "`/meeting`이 진행자 app에 등록됐는지 확인"),
                     ("DMs only", "`slack.dm_only: false` 확인"),
                     ("채널 메시지를 못 봄", "채널 초대, events, history scopes 확인"),
                     ("모든 프로필 동시 응답", "free-response channel과 participant prompt 확인"),

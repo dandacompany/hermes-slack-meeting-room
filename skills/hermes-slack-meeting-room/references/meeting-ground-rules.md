@@ -4,14 +4,14 @@ Use these rules for every Hermes Slack multi-profile meeting room.
 
 ## Roles
 
-- Manager/moderator owns the meeting state, speaker selection, mode changes, synthesis, and ending.
-- Participants answer only when the Manager assigns them the floor.
+- Moderator owns the meeting state, speaker selection, mode changes, synthesis, and ending.
+- Participants answer only when the moderator assigns them the floor.
 - The user can override the meeting at any time.
-- Participants do not coordinate directly with each other unless the Manager explicitly switches to a special mode that allows it.
+- Participants do not coordinate directly with each other unless the moderator explicitly switches to a special mode that allows it.
 
 ## Setup Gate
 
-The Manager must not mention participants until the user approves the setup draft.
+The moderator must not mention participants until the user approves the setup draft.
 
 Required setup fields:
 
@@ -32,7 +32,7 @@ If any required field is missing, ask one short clarifying question instead of s
 
 ## State Block
 
-The Manager must maintain a compact state block on every routing, pause, resume, synthesis, or decision message.
+The moderator must maintain a compact state block on every routing, pause, resume, synthesis, or decision message.
 
 ```text
 [MEETING]
@@ -49,38 +49,38 @@ last_event: <brief>
 [/MEETING]
 ```
 
-Routing and metadata do not count as meeting turns. Only substantive participant replies and final Manager synthesis count.
+Routing and metadata do not count as meeting turns. Only substantive participant replies and final moderator synthesis count.
 
 ## Message Types
 
-- `setup`: Manager asks for meeting configuration.
-- `route`: Manager assigns the next speaker or group.
+- `setup`: moderator asks for meeting configuration.
+- `route`: moderator assigns the next speaker or group.
 - `participant_turn`: A participant gives one substantive answer.
-- `handoff`: A participant returns control to the Manager.
+- `handoff`: A participant returns control to the moderator.
 - `user_intervention`: The user changes topic, constraints, participants, mode, turn count, or asks to pause/stop.
-- `synthesis`: Manager summarizes, compares, or updates the plan.
-- `final`: Manager ends the meeting.
+- `synthesis`: moderator summarizes, compares, or updates the plan.
+- `final`: moderator ends the meeting.
 - `off_protocol`: Duplicate, late, cross-mention, or unassigned participant response.
 
 ## Mention Rules
 
-- Only the Manager assigns speaking turns.
-- In sequential and directed mode, the Manager mentions exactly one participant.
-- In parallel mode, the Manager mentions the selected participants once in the same message.
+- Only the moderator assigns speaking turns.
+- In sequential and directed mode, the moderator mentions exactly one participant.
+- In parallel mode, the moderator mentions the selected participants once in the same message.
 - Participants never mention other participant apps.
-- Participants mention only the Manager in `handoff`, and only when sequential or directed mode requires it.
-- If a participant sees another participant's answer, it must not reply to that participant unless the Manager explicitly asked for cross-examination.
-- If the user speaks, all participants remain silent until the Manager re-routes.
+- Participants mention only the moderator in `handoff`, and only when sequential or directed mode requires it.
+- If a participant sees another participant's answer, it must not reply to that participant unless the moderator explicitly asked for cross-examination.
+- If the user speaks, all participants remain silent until the moderator re-routes.
 
 ## Sequential Mode
 
 Use sequential mode as the default.
 
-1. Manager selects one participant.
-2. Manager asks one bounded question.
+1. moderator selects one participant.
+2. moderator asks one bounded question.
 3. The selected participant answers once.
-4. The participant ends with `handoff: <@MANAGER_USER_ID>`.
-5. Manager updates state and chooses the next action.
+4. The participant ends with `handoff: <@MODERATOR_USER_ID>`.
+5. moderator updates state and chooses the next action.
 
 Do not assign the next participant until the expected participant has answered, the user intervenes, or the timeout policy is triggered.
 
@@ -88,40 +88,40 @@ Do not assign the next participant until the expected participant has answered, 
 
 Use parallel mode only when the meeting needs divergent ideas or independent estimates.
 
-Manager route message must include:
+moderator route message must include:
 
 ```text
 병렬 응답: 서로를 멘션하지 말고, 끝에 handoff를 쓰지 말고, [PARALLEL-DONE]으로 끝내세요.
 ```
 
-Manager waits until all expected participants respond, the user asks to continue, or the timeout policy triggers. Missing participants are listed as missing; their silence is not invented.
+moderator waits until all expected participants respond, the user asks to continue, or the timeout policy triggers. Missing participants are listed as missing; their silence is not invented.
 
 ## Directed Mode
 
-Use directed mode for one targeted question to one participant. Return to the previous mode after the answer unless the user or Manager explicitly changes the plan.
+Use directed mode for one targeted question to one participant. Return to the previous mode after the answer unless the user or moderator explicitly changes the plan.
 
 ## Mixed Mode
 
 Mixed mode must be declared with a short phase plan, for example:
 
 ```text
-framing: Manager
+framing: moderator
 divergence: parallel Marketer/Data/Researcher
 critique: sequential QA/Security
-synthesis: Manager
+synthesis: moderator
 ```
 
 ## Timeout And Duplicate Handling
 
 If a participant does not answer in the expected window:
 
-1. Manager marks the participant as `pending`.
-2. Manager may retry once with a shorter prompt.
-3. If still missing, Manager continues and records `missing: <profile>`.
+1. moderator marks the participant as `pending`.
+2. moderator may retry once with a shorter prompt.
+3. If still missing, moderator continues and records `missing: <profile>`.
 
-If a participant answers twice for the same route, count only the first substantive answer. Treat the second as `off_protocol` unless the Manager asked for a revision.
+If a participant answers twice for the same route, count only the first substantive answer. Treat the second as `off_protocol` unless the moderator asked for a revision.
 
-If a late answer arrives after synthesis moved on, Manager can either ignore it or add a one-line correction. Do not reopen the meeting automatically.
+If a late answer arrives after synthesis moved on, moderator can either ignore it or add a one-line correction. Do not reopen the meeting automatically.
 
 ## User Intervention
 
@@ -132,14 +132,14 @@ Classify user messages before continuing:
 - `revise`: change title, goal, participants, mode, voice mode, turn count, or constraints.
 - `answer`: user provides missing information.
 - `comment`: user adds context without changing the plan.
-- `direct`: user asks a specific participant or the Manager a targeted question.
+- `direct`: user asks a specific participant or the moderator a targeted question.
 
 After any intervention:
 
-1. Manager pauses routing.
-2. Manager states the interpreted change in one sentence.
-3. Manager updates the state block.
-4. Manager continues only after the next action is clear.
+1. moderator pauses routing.
+2. moderator states the interpreted change in one sentence.
+3. moderator updates the state block.
+4. moderator continues only after the next action is clear.
 
 ## Anti-Convergence
 
@@ -147,7 +147,7 @@ Do not let the meeting collapse into agreement too early.
 
 - At halfway, require one dissent checkpoint.
 - Before final synthesis, require one risk or verification checkpoint.
-- If all participants agree, the Manager assigns contrasting frames such as customer risk, technical risk, financial risk, legal risk, operational risk, or failure scenario.
+- If all participants agree, the moderator assigns contrasting frames such as customer risk, technical risk, financial risk, legal risk, operational risk, or failure scenario.
 - Participants must add at least one new reason, counterexample, condition, metric, or execution risk.
 
 ## Thread And Channel Behavior
@@ -183,7 +183,7 @@ If the gateway supports it, wrap the exact spoken content:
 
 ## Ending
 
-The Manager ends the meeting when:
+The moderator ends the meeting when:
 
 - Turn count is complete, or
 - The user stops the meeting, or

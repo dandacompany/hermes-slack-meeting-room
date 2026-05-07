@@ -29,7 +29,7 @@ The meeting behavior is produced by the configured Hermes profiles, Slack gatewa
 - Prefer deterministic steps: copy templates, edit config files, run validation, restart services, and run smoke tests.
 - Treat Slack app creation, OAuth scopes, Socket Mode, app reinstall, token generation, slash command setup, and channel invitation as guided user actions.
 - Do not present this skill as a plugin or as a runtime feature provider. Present it as an onboarding workflow that produces configuration, prompts, conventions, and validation steps.
-- Default to one base Manager profile plus three additional participant profiles, but make every profile name, role, persona, channel policy, and TTS voice user-configurable.
+- Default to one moderator profile plus three additional participant profiles, but make every profile name, role, persona, channel policy, and TTS voice user-configurable.
 - Keep each Hermes profile name, Slack app display name, and human-facing persona name intentionally aligned unless the user explicitly chooses an exception.
 - Edge TTS is the lowest-friction default. Also present Hermes built-in TTS providers discovered on the target install and Typecast voice candidates when available.
 
@@ -85,7 +85,7 @@ Built-in business persona examples:
 
 | Preset | Use |
 | --- | --- |
-| Manager | Facilitation, turn control, Socratic setup |
+| Moderator | Facilitation, turn control, Socratic setup |
 | Marketer | Positioning, campaign, funnel, customer message |
 | Product | Product strategy, PRD, roadmap, prioritization |
 | Backend | API, database, reliability, security-sensitive architecture |
@@ -144,16 +144,16 @@ For each profile-specific Slack app, guide the user through:
 - Token placement in the correct profile `.env`
 - App invitation to the meeting channel
 
-Register `/meeting` only on the Manager/base app by default.
+Register `/meeting` only on the moderator app by default.
 
 ### 5. Meeting Ground Rules
 
 Read `references/meeting-ground-rules.md` before generating channel prompts or testing `/meeting`.
 
-Ensure the generated Manager and participant prompts enforce:
+Ensure the generated moderator and participant prompts enforce:
 
 - Setup gate before participant mentions
-- Manager-only turn assignment
+- Moderator-only turn assignment
 - Sequential, parallel, directed, and mixed mode rules
 - Compact state block updates
 - User intervention classification
@@ -220,7 +220,7 @@ Test in a dedicated Slack channel first.
 /meeting 테스트 회의, 3턴, text-only
 ```
 
-4. Confirm the Manager asks setup questions before mentioning participants.
+4. Confirm the moderator asks setup questions before mentioning participants.
 5. Confirm sequential handoff works.
 6. Confirm user intervention pauses routing and updates the state block.
 7. Confirm duplicate or late participant replies do not reopen completed turns.
