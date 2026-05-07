@@ -85,3 +85,17 @@ Check:
 - Voice ID belongs to the same account.
 - Text meeting flow works before enabling voice.
 - Gateway logs show no provider authentication or quota errors.
+
+Do not paste provider keys into chat. Open the profile `.env` file and let the user edit it directly:
+
+```bash
+touch <PROFILE_ENV_FILE>
+chmod 600 <PROFILE_ENV_FILE>
+"${VISUAL:-${EDITOR:-nano}}" <PROFILE_ENV_FILE>
+```
+
+Confirm only that key names are present:
+
+```bash
+grep -E '^(TYPECAST_API_KEY|ELEVENLABS_API_KEY)=' <PROFILE_ENV_FILE> | sed 's/=.*/=<set>/'
+```

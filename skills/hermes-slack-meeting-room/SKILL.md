@@ -115,6 +115,7 @@ Start with the user's target Hermes install. Ask Codex to inspect available Herm
 - Hermes built-in/free providers available in that install
 - Provider-specific requirements
 - Typecast candidates if the user has a Typecast API key or voice list
+- ElevenLabs candidates if the user has an ElevenLabs API key or voice ID
 - Voice mode: `text-only`, `voice-summary`, `voice-full`, or `hybrid`
 
 Default recommendation:
@@ -127,6 +128,34 @@ tts:
 ```
 
 Use Typecast or ElevenLabs only after text meeting flow passes.
+
+When a selected provider requires an API key, token, voice ID, or account-specific setting, do not ask the user to paste the secret into chat. Instead:
+
+1. Identify the profile-specific `.env` file or provider config file used by the target Hermes install.
+2. Create it if it does not exist, then set permissions to user-only when possible.
+3. Open the file for the user with their editor and wait for them to save it:
+
+```bash
+touch <PROFILE_ENV_FILE>
+chmod 600 <PROFILE_ENV_FILE>
+"${VISUAL:-${EDITOR:-nano}}" <PROFILE_ENV_FILE>
+```
+
+4. Tell the user to add only the required keys, for example:
+
+```bash
+TYPECAST_API_KEY=<paste key here>
+ELEVENLABS_API_KEY=<paste key here>
+```
+
+5. After the user saves the file, verify only that required variable names exist. Never print full values:
+
+```bash
+grep -E '^(TYPECAST_API_KEY|ELEVENLABS_API_KEY|SLACK_BOT_TOKEN|SLACK_APP_TOKEN)=' <PROFILE_ENV_FILE> \
+  | sed 's/=.*/=<set>/'
+```
+
+6. If voice IDs are stored in Hermes profile config instead of `.env`, open the staged profile config file the same way and ask the user to save the chosen `voice` or `voice_id` there.
 
 ### 4. Slack Checklist
 

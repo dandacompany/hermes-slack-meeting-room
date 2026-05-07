@@ -198,7 +198,7 @@ hermes-slack-meeting-room skill을 사용해서 Slack 멀티프로필 회의실�
                     ("Persona display name", "`Contents`처럼 회의 프롬프트에서 부를 이름"),
                     ("Naming rule", "Hermes 설정, Slack 앱, 회의 프롬프트에서 같은 프로필임을 바로 알아볼 수 있게 맞춤"),
                     ("Persona card", "이름, 직업/역할, 성격, 가치관, 말투, 배경, 판단 기준, 피해야 할 방식"),
-                    ("TTS", "Edge TTS 기본, Hermes built-in provider와 Typecast 후보 선택 가능"),
+                    ("TTS", "Edge TTS 기본, Hermes built-in provider, Typecast, ElevenLabs 후보 선택 가능"),
                     ("Channel policy", "처음에는 테스트 채널 1개만 허용"),
                 ],
                 ("결정 항목", "권장 시작점"),
@@ -255,6 +255,27 @@ Channel invite: 회의 채널에 모든 Hermes app 초대
                 "06-2. /meeting command",
                 "`/meeting`은 진행자 앱 하나에만 등록합니다. 여러 앱에 같은 slash command를 등록하면 어느 앱이 받는지 불명확해집니다.",
             ),
+            code_block(
+                "06-3. Secret input",
+                """
+touch <PROFILE_ENV_FILE>
+chmod 600 <PROFILE_ENV_FILE>
+"${VISUAL:-${EDITOR:-nano}}" <PROFILE_ENV_FILE>
+
+# 필요한 값만 파일에 저장합니다.
+TYPECAST_API_KEY=<TYPECAST_API_KEY>
+ELEVENLABS_API_KEY=<ELEVENLABS_API_KEY>
+                """,
+                "bash",
+            ),
+            code_block(
+                "06-4. Secret check",
+                """
+grep -E '^(TYPECAST_API_KEY|ELEVENLABS_API_KEY|SLACK_BOT_TOKEN|SLACK_APP_TOKEN)=' <PROFILE_ENV_FILE> \\
+  | sed 's/=.*/=<set>/'
+                """,
+                "bash",
+            ),
         ],
     },
     {
@@ -284,7 +305,7 @@ hermes --profile <profile-3> config check
             ),
             note_block(
                 "07-3. Placeholder rule",
-                "`<MEETING_CHANNEL_ID>`, `<@MODERATOR_USER_ID>`, `<ROLE_SPECIALIZATION>`, `<TYPECAST_VOICE_ID>` 같은 placeholder가 남아 있으면 gateway를 재시작하지 않습니다.",
+                "`<MEETING_CHANNEL_ID>`, `<@MODERATOR_USER_ID>`, `<ROLE_SPECIALIZATION>`, `<TYPECAST_VOICE_ID>`, `<ELEVENLABS_VOICE_ID>` 같은 placeholder가 남아 있으면 gateway를 재시작하지 않습니다.",
             ),
         ],
     },

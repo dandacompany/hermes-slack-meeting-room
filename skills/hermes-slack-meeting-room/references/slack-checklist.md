@@ -82,6 +82,28 @@ SLACK_ALLOWED_USERS=<SLACK_USER_ID_1>,<SLACK_USER_ID_2>
 SLACK_HOME_CHANNEL=<OPTIONAL_HOME_CHANNEL_ID>
 ```
 
+Use the same rule for TTS provider credentials. Open the profile `.env` file locally and let the user paste and save secrets there:
+
+```bash
+touch <PROFILE_ENV_FILE>
+chmod 600 <PROFILE_ENV_FILE>
+"${VISUAL:-${EDITOR:-nano}}" <PROFILE_ENV_FILE>
+```
+
+Optional voice provider examples:
+
+```bash
+TYPECAST_API_KEY=<TYPECAST_API_KEY>
+ELEVENLABS_API_KEY=<ELEVENLABS_API_KEY>
+```
+
+After saving, verify presence without printing secret values:
+
+```bash
+grep -E '^(SLACK_BOT_TOKEN|SLACK_APP_TOKEN|TYPECAST_API_KEY|ELEVENLABS_API_KEY)=' <PROFILE_ENV_FILE> \
+  | sed 's/=.*/=<set>/'
+```
+
 ## Channel Setup
 
 In the Slack meeting test channel:

@@ -36,6 +36,22 @@ typecast_optional:
           voice: "<TYPECAST_VOICE_ID>"
           voice_name: "<VOICE_NAME>"
 
+elevenlabs_optional:
+  label: "ElevenLabs"
+  description: "Optional high-quality voice provider. Requires ElevenLabs support in the target Hermes install or plugin."
+  env:
+    ELEVENLABS_API_KEY: "<ELEVENLABS_API_KEY>"
+  config:
+    voice:
+      auto_tts: false
+    tts:
+      provider: elevenlabs
+      providers:
+        elevenlabs:
+          voice: "<ELEVENLABS_VOICE_ID>"
+          voice_name: "<VOICE_NAME>"
+          model: "<ELEVENLABS_MODEL_OR_DEFAULT>"
+
 voice_modes:
   text-only: "No TTS. Use for first meeting tests."
   voice-summary: "Only a final speakable summary sentence is read."

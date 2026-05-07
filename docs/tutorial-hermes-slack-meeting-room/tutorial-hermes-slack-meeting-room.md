@@ -113,7 +113,7 @@ Hermes는 바로 YAML 편집을 요구하지 않고 먼저 문답으로 profile 
 | decision lens | 시청자가 바로 이해하고 실행할 수 있는가 |
 | avoided behaviors | 근거 없는 낙관, 장황한 설명, 빠른 합의 |
 | 허용 채널 | 테스트 회의 채널 1개부터 |
-| TTS provider | Edge TTS, Hermes built-in provider, Typecast |
+| TTS provider | Edge TTS, Hermes built-in provider, Typecast, ElevenLabs |
 | voice mode | text-only, voice-summary, voice-full, hybrid |
 
 기본 규칙은 `contents` profile이면 Slack 앱은 `Hermes Contents`, 회의 프롬프트의 persona name은 `Contents`처럼 맞추는 것입니다. 예외가 필요하면 문답에서 이유를 확인하고 명시적으로 기록합니다.
@@ -162,6 +162,25 @@ Channel invite: 회의 채널에 모든 Hermes app 초대
 
 `/meeting` slash command는 기본적으로 진행자 앱 하나에만 등록합니다. 여러 앱에 같은 command를 중복 등록하면 어떤 앱이 받는지 헷갈리고, workspace 설정에 따라 충돌처럼 보일 수 있습니다.
 
+API key나 token은 채팅에 붙여넣지 않습니다. 스킬은 profile별 `.env` 파일을 열어 사용자가 직접 입력하고 저장하도록 안내합니다.
+
+```bash
+touch <PROFILE_ENV_FILE>
+chmod 600 <PROFILE_ENV_FILE>
+"${VISUAL:-${EDITOR:-nano}}" <PROFILE_ENV_FILE>
+
+# 필요한 값만 파일에 저장합니다.
+TYPECAST_API_KEY=<TYPECAST_API_KEY>
+ELEVENLABS_API_KEY=<ELEVENLABS_API_KEY>
+```
+
+저장 뒤에는 값이 아니라 설정 여부만 확인합니다.
+
+```bash
+grep -E '^(TYPECAST_API_KEY|ELEVENLABS_API_KEY|SLACK_BOT_TOKEN|SLACK_APP_TOKEN)=' <PROFILE_ENV_FILE> \
+  | sed 's/=.*/=<set>/'
+```
+
 ## 8. Hermes 설정 적용
 
 문답이 끝나면 skill은 아래 템플릿을 사용해 설정 초안을 만듭니다.
@@ -173,7 +192,7 @@ assets/templates/tts-options.yaml
 assets/hermes-meeting/SKILL.md
 ```
 
-적용 전에는 `<MEETING_CHANNEL_ID>`, `<@MODERATOR_USER_ID>`, `<ROLE_SPECIALIZATION>`, `<TYPECAST_VOICE_ID>` 같은 placeholder가 남아 있지 않은지 확인합니다.
+적용 전에는 `<MEETING_CHANNEL_ID>`, `<@MODERATOR_USER_ID>`, `<ROLE_SPECIALIZATION>`, `<TYPECAST_VOICE_ID>`, `<ELEVENLABS_VOICE_ID>` 같은 placeholder가 남아 있지 않은지 확인합니다.
 
 프로필별 기본 검증은 아래처럼 합니다.
 
