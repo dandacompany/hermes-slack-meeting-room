@@ -90,7 +90,7 @@ Use sequential mode as the default.
 1. moderator selects one participant.
 2. moderator asks one bounded question.
 3. The selected participant answers once.
-4. The participant ends with `handoff: Bryan`.
+4. The participant ends with `handoff: @Bryan`.
 5. moderator updates state and chooses the next action.
 
 Do not assign the next participant until the expected participant has answered, the user intervenes, or the timeout policy is triggered.
