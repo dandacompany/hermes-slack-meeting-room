@@ -174,6 +174,7 @@ For each profile-specific Slack app, guide the user through:
 - Token placement in the correct profile `.env`
 - App invitation to the meeting channel
 - Bot-to-bot routing for meetings: every profile's allowlist must include the human operator and all meeting bot user IDs, with `SLACK_ALLOW_BOTS=mentions`
+- Exact mention routing for meetings: define a profile-to-Slack-user map and require the moderator to route with `<@BOT_USER_ID> ProfileName`, not names alone
 
 Register `/meeting` only on the moderator app by default.
 
@@ -186,6 +187,8 @@ Ensure the generated moderator and participant prompts enforce:
 
 - Setup gate before participant mentions
 - Slack Block Kit meeting control: `/meeting` opens the meeting UI, and start/continue/end actions route to a dedicated meeting session instead of normal `@mention` sessions
+- Auto routing immediately mentions the next profile; manual routing waits for the `/meeting` UI next-speaker button
+- Participant route messages include the full compact meeting context needed for that profile to answer from the ongoing conversation
 - Moderator-only turn assignment
 - Sequential, parallel, directed, and mixed mode rules
 - Compact state block updates
@@ -251,20 +254,23 @@ Test in a dedicated Slack channel first.
 4. Click `새 회의 시작` and configure topic, participants, turn count, mode, and voice mode.
 5. Confirm the moderator creates a setup draft before mentioning participants.
 6. Click the meeting UI `시작` button and confirm it starts the same dedicated meeting session.
-7. Click `이어쓰기`, send a follow-up message, and confirm the meeting continues with the prior `[MEETING]` state.
-8. Send a normal `@<moderator> ...` message and confirm it uses a separate normal Slack session, not the meeting session.
-9. Confirm sequential handoff works.
-10. Confirm user intervention through the meeting UI pauses routing and updates the state block.
-11. Confirm duplicate or late participant replies do not reopen completed turns.
-12. Click `종료` and confirm the moderator closes with decision/summary, open questions, next actions, and `회의 종료`.
-13. Enable voice only after the text meeting passes.
+7. In auto routing, confirm the next participant is called with the exact Slack mention and responds.
+8. In manual routing, confirm no participant is auto-mentioned and the UI `다음: <profile>` button routes one turn to the selected profile.
+9. Confirm the selected participant receives current meeting context and answers from that context.
+10. Click `이어쓰기`, send a follow-up message, and confirm the meeting continues with the prior `[MEETING]` state.
+11. Send a normal `@<moderator> ...` message and confirm it uses a separate normal Slack session, not the meeting session.
+12. Confirm sequential handoff works.
+13. Confirm user intervention through the meeting UI pauses routing and updates the state block.
+14. Confirm duplicate or late participant replies do not reopen completed turns.
+15. Click `종료` and confirm the moderator closes with decision/summary, open questions, next actions, and `회의 종료`.
+16. Enable voice only after the text meeting passes.
 
 ```text
 /meeting
 ```
 
-14. Confirm Slack uploads MP3 audio for voice replies unless the user explicitly configured an Opus/OGG voice-bubble workflow.
-15. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
+17. Confirm Slack uploads MP3 audio for voice replies unless the user explicitly configured an Opus/OGG voice-bubble workflow.
+18. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
 
 ## Troubleshooting
 

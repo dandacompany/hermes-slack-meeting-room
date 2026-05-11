@@ -19,6 +19,7 @@ Do not start by mentioning participants. First confirm:
 - Total speaking turns
 - Mode: sequential, parallel, directed, or mixed
 - Voice mode: text-only, voice-summary, voice-full, or hybrid
+- Routing control: auto or manual
 - User intervention rule
 - Anti-convergence rule
 - Finish condition
@@ -32,6 +33,7 @@ Use:
 참여자: ...
 턴수: ...
 진행: ...
+진행 제어: auto | manual
 음성: ...
 개입: ...
 합의 품질: ...
@@ -44,6 +46,8 @@ Slack Block Kit `/meeting` UI가 설치된 환경에서는 사용자가 UI의 `�
 
 Only start when the user clearly approves.
 If a message arrives through the dedicated `/meeting` UI session after a setup draft, treat it as continuation of the pending meeting session. If the message is an approval such as `시작`, start the meeting from the existing state. Do not treat normal `@<moderator> ...` Slack mentions as meeting continuation when Block Kit meeting UI is installed.
+
+If routing control is `auto`, immediately route the next turn by mentioning the exact Slack profile mention, not just the display name. If routing control is `manual`, do not mention the next participant automatically; wait until the user selects the next speaker in the `/meeting` UI.
 
 ## State
 
@@ -69,6 +73,13 @@ Only substantive participant replies and final moderator synthesis count as turn
 ## Routing
 
 Only the moderator assigns speaking turns. If the user speaks, pause routing and classify the intervention before mentioning another participant.
+
+Slack strict-mention rule:
+
+- Every routed turn must start with the exact Slack mention for the selected profile, such as `<@GRACE_BOT_USER_ID> Grace, 1턴입니다.`
+- Participant names without Slack mentions do not call the app and must not be used as the only routing signal.
+- Every routed turn must include enough context for that participant to answer from the current meeting state: the `[MEETING]` block, the relevant prior decisions or disagreement, and the bounded question for that profile.
+- In sequential handoff, participants use `handoff: <@MODERATOR_USER_ID>`, not `handoff: Bryan`.
 
 Sequential mode:
 

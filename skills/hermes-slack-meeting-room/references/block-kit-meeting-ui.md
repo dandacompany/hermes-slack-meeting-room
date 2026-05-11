@@ -10,6 +10,7 @@ Use this reference when `/meeting` should act like a Slack control surface inste
 - List existing meetings
 - Start a setup-stage meeting
 - Continue a meeting with a follow-up message
+- Select the next speaker in manual routing mode
 - End a meeting
 
 Normal Slack mentions remain normal conversations. They do not continue meeting sessions.
@@ -30,6 +31,7 @@ Persist meeting metadata outside normal Slack message sessions:
       "participants": ["Grace", "Mike", "Sunny"],
       "turns": "4",
       "mode": "mixed",
+      "routing_mode": "auto",
       "voice_mode": "voice-summary",
       "status": "setup",
       "session_thread_id": "meeting:C...:mtg-0511-101500"
@@ -59,12 +61,14 @@ New meeting modal fields:
 - Participants as a multi-select
 - Turn count
 - Mode: `mixed`, `sequential`, `parallel`, `directed`
+- Routing control: `auto` immediately mentions the next profile; `manual` waits for a user-selected next-speaker button
 - Voice mode: `voice-summary`, `text-only`, `voice-full`, `hybrid`
 
 Existing meeting actions:
 
 - `시작`: send `시작` to the dedicated meeting session
 - `이어쓰기`: open a modal and send the submitted message to the dedicated meeting session
+- `다음: <profile>`: in manual routing mode, ask the moderator in the dedicated meeting session to route one turn to that profile
 - `종료`: send a finalization request and mark the meeting ended
 
 ## Prompt Contract
@@ -77,11 +81,13 @@ When the UI creates a meeting, dispatch a command-style event to Hermes:
 참석자: Grace, Mike, Sunny
 턴수: 4턴
 진행: mixed
+진행 제어: auto
 음성: voice-summary
-세션: 이 회의는 Slack Block Kit `/meeting` UI에서 생성된 전용 meeting 세션입니다. 일반 @멘션 대화와 분리해서 진행하고, 시작/이어쓰기/종료는 `/meeting` UI 액션으로만 받습니다. 먼저 setup 초안을 보여주고 참가자를 멘션하지 마세요.
+세션: 이 회의는 Slack Block Kit `/meeting` UI에서 생성된 전용 meeting 세션입니다. 일반 @멘션 대화와 분리해서 진행하고, 시작/이어쓰기/종료/다음 발언자 선택은 `/meeting` UI 액션으로만 받습니다. 먼저 setup 초안을 보여주고 참가자를 멘션하지 마세요.
 ```
 
 The moderator must not instruct the user to continue via normal `@moderator` messages when the UI is installed.
+In auto routing, the moderator must immediately call the next participant using the exact Slack mention. In manual routing, the moderator must wait for the UI next-speaker action and must not auto-mention participants.
 
 ## Slack Requirements
 
@@ -104,6 +110,8 @@ SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<GRACE_BOT_USER_ID>,
 SLACK_ALLOW_BOTS=mentions
 SLACK_REQUIRE_MENTION=true
 SLACK_STRICT_MENTION=true
+SLACK_MEETING_MENTION_MAP=Bryan:U...,Grace:U...,Mike:U...,Sunny:U...
+SLACK_INJECT_BOT_MENTION_CONTEXT=true
 ```
 
 Rules:
@@ -111,4 +119,6 @@ Rules:
 - Include every profile app's Slack bot user id, not just the human user's id.
 - Keep `SLACK_ALLOW_BOTS=mentions`; do not use `all` for meeting rooms unless you intentionally want broad bot-message ingestion.
 - Participants still answer only when the moderator explicitly mentions them.
+- If a moderator writes `Grace` instead of `<@GRACE_BOT_USER_ID> Grace`, the gateway should rewrite the routed meeting message before sending where possible.
+- Profiles should receive recent meeting context on top-level bot-to-bot mentions so they can answer from the actual conversation, not only from the latest prompt.
 - Normal unmentioned bot chatter remains ignored.
