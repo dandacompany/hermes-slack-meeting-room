@@ -51,6 +51,20 @@ Check:
 - Scopes include `channels:history` or `groups:history`.
 - The meeting channel is in the profile's allowlist or free-response channel list.
 
+## `/meeting` forgets context after the setup draft
+
+Likely causes:
+
+- The `/meeting` setup response was delivered as a Slack ephemeral slash-command reply.
+- Slack is configured with `require_mention: true` and `strict_mention: true`.
+- The user typed bare `시작` in the channel, so the bot ignored it or treated the next mention as a new top-level session.
+
+Fix:
+
+- In the moderator prompt, ask for `@<moderator> 시작` in the same channel/thread.
+- Prefer a gateway `/meeting` approval bridge that remembers the same `(channel_id, user_id)` for a short TTL and accepts bare `시작`, `start`, `go`, `진행`, or `승인` as continuation.
+- If no bridge exists, do not tell the user that plain `시작` is sufficient in strict-mention rooms.
+
 ## Every profile answers at once
 
 Use moderator-led routing:
@@ -75,6 +89,16 @@ participant mentions
 ```
 
 Prefer `voice-summary` and ask participants to put only the spoken line after `음성 요약:`. If the gateway supports `[TTS]...[/TTS]`, wrap only speakable content in that block.
+
+## Slack uploads OGG instead of MP3
+
+Likely cause: the TTS provider is configured with `voice_compatible: true`, which can convert generated MP3 into Opus/OGG for voice-bubble compatibility.
+
+Fix for Slack meeting rooms:
+
+- Set command-provider `output_format: mp3`.
+- Set command-provider `voice_compatible: false` unless the platform explicitly requires Opus/OGG.
+- Restart the gateway and run one `text_to_speech_tool` smoke test to confirm the returned file path ends in `.mp3`.
 
 ## Typecast or ElevenLabs does not speak
 
