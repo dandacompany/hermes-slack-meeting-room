@@ -57,13 +57,14 @@ Likely causes:
 
 - The `/meeting` setup response was delivered as a Slack ephemeral slash-command reply.
 - Slack is configured with `require_mention: true` and `strict_mention: true`.
-- The user typed bare `시작` in the channel, so the bot ignored it or treated the next mention as a new top-level session.
+- `/meeting` was implemented as a normal message bridge instead of a dedicated meeting session router.
+- The user tried to continue the meeting through `@<moderator> ...`, which belongs to the normal Slack mention session.
 
 Fix:
 
-- In the moderator prompt, ask for `@<moderator> 시작` in the same channel/thread.
-- Prefer a gateway `/meeting` follow-up bridge that remembers the same `(channel_id, user_id)` for a short TTL and routes subsequent `@<moderator> ...` messages into the slash-created meeting session.
-- If no bridge exists, do not imply that a top-level `@<moderator> ...` message will preserve context; ask the user to reply in the same Slack thread or use another session-preserving mechanism.
+- Prefer the Block Kit `/meeting` UI described in `block-kit-meeting-ui.md`.
+- Store meeting records separately from normal Slack sessions and route UI actions to a session key such as `meeting:<channel_id>:<meeting_id>`.
+- Use the UI `시작`, `이어쓰기`, and `종료` actions for meeting continuation. Do not rely on normal `@<moderator> ...` messages to preserve meeting context.
 
 ## Every profile answers at once
 
