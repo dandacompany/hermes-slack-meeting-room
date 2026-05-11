@@ -43,5 +43,7 @@ participant_profile:
 env_file_template: |
   SLACK_BOT_TOKEN=xoxb-...
   SLACK_APP_TOKEN=xapp-...
-  SLACK_ALLOWED_USERS=<SLACK_USER_ID_1>,<SLACK_USER_ID_2>
+  # Include the human operator and every meeting bot user id so moderator-to-participant bot mentions work.
+  SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<PARTICIPANT_BOT_USER_ID_1>,<PARTICIPANT_BOT_USER_ID_2>
+  SLACK_ALLOW_BOTS=mentions
   SLACK_HOME_CHANNEL=<OPTIONAL_HOME_CHANNEL_ID>
