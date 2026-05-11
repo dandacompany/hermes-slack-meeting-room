@@ -12,11 +12,11 @@ Use these rules for every Hermes Slack multi-profile meeting room.
 ## Setup Gate
 
 The moderator must not mention participants until the user approves the setup draft.
-In Slack strict-mention rooms, the setup draft must tell the user how to approve without losing context:
+In Slack workspaces with the Block Kit meeting UI, meeting setup and follow-up should be controlled by `/meeting` UI actions:
 
-- Safest default: reply in the same channel or thread with `@<moderator> 시작`.
-- If the gateway has a `/meeting` follow-up bridge, the same user may continue with `@<moderator> ...` in the same channel and the message must route to the existing meeting session.
-- Treat that follow-up as continuation of the pending `/meeting` setup, not as a new conversation.
+- `/meeting` opens a meeting room UI with new meeting, meeting list, start, continue, and end actions.
+- New meeting, start, continue, and end actions must route to a dedicated meeting session key such as `meeting:<channel_id>:<meeting_id>`.
+- Normal `@<moderator> ...` messages are ordinary Slack conversations and must not be treated as meeting continuation.
 - Do not route participants until this approval is received.
 
 Required setup fields:
@@ -161,7 +161,7 @@ Do not let the meeting collapse into agreement too early.
 - Follow the configured Slack surface. If the meeting started in a thread, stay in that thread. If it started in the channel root, keep routing in the channel root.
 - Do not split one meeting across multiple channels or DMs.
 - If a profile is not a channel member, stop and ask the user to invite it instead of continuing with a hidden participant.
-- Slash-command setup replies may be ephemeral. If so, the gateway must preserve a channel/user meeting context so `@<moderator> ...` in the same Slack surface continues the meeting session.
+- Slash-command setup replies may be ephemeral. If the Block Kit meeting UI is installed, the gateway must preserve durable meeting records and route UI actions to the dedicated meeting session, not to normal Slack mention sessions.
 
 ## TTS Rules
 
