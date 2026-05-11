@@ -88,7 +88,7 @@ For multi-profile meetings, include every meeting bot's Slack user id in every p
 Example shape:
 
 ```bash
-SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<GRACE_BOT_USER_ID>,<MIKE_BOT_USER_ID>,<SUNNY_BOT_USER_ID>
+SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<PARTICIPANT_BOT_USER_ID_1>,<PARTICIPANT_BOT_USER_ID_2>
 SLACK_ALLOW_BOTS=mentions
 ```
 

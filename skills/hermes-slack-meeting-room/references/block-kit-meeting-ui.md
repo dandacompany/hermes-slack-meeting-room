@@ -28,7 +28,7 @@ Persist meeting metadata outside normal Slack message sessions:
       "channel_id": "C...",
       "user_id": "U...",
       "title": "YouTube planning",
-      "participants": ["Grace", "Mike", "Sunny"],
+      "participants": ["<PARTICIPANT_NAME_1>", "<PARTICIPANT_NAME_2>"],
       "turns": "4",
       "mode": "mixed",
       "routing_mode": "auto",
@@ -78,7 +78,7 @@ When the UI creates a meeting, dispatch a command-style event to Hermes:
 ```text
 /meeting <topic>
 
-참석자: Grace, Mike, Sunny
+참석자: <PARTICIPANT_NAME_1>, <PARTICIPANT_NAME_2>
 턴수: 4턴
 진행: mixed
 진행 제어: auto
@@ -106,7 +106,7 @@ Block Kit button and modal callbacks should use action ids and callback ids pref
 Multi-profile meetings require bot-to-bot messages only for explicit moderator routing. Configure every profile environment with:
 
 ```bash
-SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<GRACE_BOT_USER_ID>,<MIKE_BOT_USER_ID>,<SUNNY_BOT_USER_ID>
+SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<PARTICIPANT_BOT_USER_ID_1>,<PARTICIPANT_BOT_USER_ID_2>
 SLACK_ALLOW_BOTS=mentions
 SLACK_REQUIRE_MENTION=true
 SLACK_STRICT_MENTION=true
@@ -118,7 +118,7 @@ Rules:
 - Include every profile app's Slack bot user id, not just the human user's id.
 - Keep `SLACK_ALLOW_BOTS=mentions`; do not use `all` for meeting rooms unless you intentionally want broad bot-message ingestion.
 - Participants still answer only when the moderator explicitly mentions them.
-- If a moderator writes `Grace 1턴입니다.`, the gateway may rewrite that single routed line to the real Slack mention before sending.
+- If a moderator writes `<PARTICIPANT_NAME> 1턴입니다.`, the gateway may rewrite that single routed line to the real Slack mention before sending.
 - Do not print Slack user IDs or mention maps in user-visible warnings or setup messages.
 - Profiles should receive recent meeting context on top-level bot-to-bot mentions so they can answer from the actual conversation, not only from the latest prompt.
 - Normal unmentioned bot chatter remains ignored.

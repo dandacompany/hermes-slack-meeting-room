@@ -72,7 +72,7 @@ Use moderator-led routing:
 
 - Participants answer only when directly mentioned by the moderator.
 - Participants do not mention each other.
-- Participants return to the moderator with `handoff: @<MODERATOR_NAME>` in sequential mode, for example `handoff: @Bryan`.
+- Participants return to the moderator with `handoff: @<MODERATOR_NAME>` in sequential mode, replacing `<MODERATOR_NAME>` with the moderator configured for that meeting.
 - Free-response channels should be limited to trusted test/meeting channels.
 
 ## Participants do not answer moderator mentions
