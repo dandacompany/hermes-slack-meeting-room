@@ -75,6 +75,21 @@ Use moderator-led routing:
 - Participants return to the moderator with `handoff: <@MODERATOR_USER_ID>` in sequential mode.
 - Free-response channels should be limited to trusted test/meeting channels.
 
+## Participants do not answer moderator mentions
+
+Likely causes:
+
+- Participant profile `.env` allows only the human user's Slack id.
+- `SLACK_ALLOW_BOTS` is missing or set to `none`.
+- The moderator mentions the participant app, but Slack marks the sender as the moderator bot user.
+
+Fix:
+
+- Add every meeting bot user id to every profile's `SLACK_ALLOWED_USERS`.
+- Set `SLACK_ALLOW_BOTS=mentions`, not `all`.
+- Keep `SLACK_REQUIRE_MENTION=true` and `SLACK_STRICT_MENTION=true` so participants only answer explicit moderator mentions.
+- Restart every profile gateway after changing `.env`.
+
 ## TTS reads metadata
 
 Spoken content must exclude:
