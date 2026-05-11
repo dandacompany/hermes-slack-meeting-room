@@ -179,11 +179,12 @@ Register `/meeting` only on the moderator app by default.
 ### 5. Meeting Ground Rules
 
 Read `references/meeting-ground-rules.md` before generating channel prompts or testing `/meeting`.
+For Slack workspaces with Block Kit interactivity enabled, also read `references/block-kit-meeting-ui.md`.
 
 Ensure the generated moderator and participant prompts enforce:
 
 - Setup gate before participant mentions
-- Slack strict-mention follow-up guidance: after `/meeting`, continue with `@<moderator> ...` in the same channel; the gateway should route it to the existing meeting session
+- Slack Block Kit meeting control: `/meeting` opens the meeting UI, and start/continue/end actions route to a dedicated meeting session instead of normal `@mention` sessions
 - Moderator-only turn assignment
 - Sequential, parallel, directed, and mixed mode rules
 - Compact state block updates
@@ -245,30 +246,32 @@ Test in a dedicated Slack channel first.
 
 1. Invite every profile app to the test channel.
 2. Send a direct mention to each app.
-3. Run text-only meeting setup:
+3. Run `/meeting` with no text and confirm the Block Kit meeting room opens.
+4. Click `새 회의 시작` and configure topic, participants, turn count, mode, and voice mode.
+5. Confirm the moderator creates a setup draft before mentioning participants.
+6. Click the meeting UI `시작` button and confirm it starts the same dedicated meeting session.
+7. Click `이어쓰기`, send a follow-up message, and confirm the meeting continues with the prior `[MEETING]` state.
+8. Send a normal `@<moderator> ...` message and confirm it uses a separate normal Slack session, not the meeting session.
+9. Confirm sequential handoff works.
+10. Confirm user intervention through the meeting UI pauses routing and updates the state block.
+11. Confirm duplicate or late participant replies do not reopen completed turns.
+12. Click `종료` and confirm the moderator closes with decision/summary, open questions, next actions, and `회의 종료`.
+13. Enable voice only after the text meeting passes.
 
 ```text
-/meeting 테스트 회의, 3턴, text-only
+/meeting
 ```
 
-4. Confirm the moderator asks setup questions before mentioning participants.
-5. Confirm sequential handoff works.
-6. Confirm user intervention pauses routing and updates the state block.
-7. Confirm duplicate or late participant replies do not reopen completed turns.
-8. In strict-mention rooms, confirm `/meeting` setup can be approved with `@<moderator> 시작` and that later `@<moderator> ...` messages continue the same meeting session when a follow-up bridge is installed.
-9. Enable voice only after the text meeting passes:
-
-```text
-/meeting 테스트 회의, 3턴, voice-summary
-```
-10. Confirm Slack uploads MP3 audio for voice replies unless the user explicitly configured an Opus/OGG voice-bubble workflow.
-11. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
+14. Confirm Slack uploads MP3 audio for voice replies unless the user explicitly configured an Opus/OGG voice-bubble workflow.
+15. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
 
 ## Troubleshooting
 
 Read `references/troubleshooting.md` when Slack says the app did not respond, `/meeting` is unknown, the app is configured for DMs only, a bot does not see the channel, or TTS speaks routing metadata.
 
 Read `references/meeting-ground-rules.md` when turn order, mentions, user intervention, parallel replies, duplicate replies, or meeting ending behavior is unclear.
+
+Read `references/block-kit-meeting-ui.md` when `/meeting` should provide buttons, modals, meeting lists, or dedicated meeting-session routing.
 
 Read `references/plugin-boundary.md` if the user asks whether this should be a Hermes plugin instead of a skill.
 
