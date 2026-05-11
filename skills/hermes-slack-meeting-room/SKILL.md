@@ -255,7 +255,7 @@ Test in a dedicated Slack channel first.
 5. Confirm sequential handoff works.
 6. Confirm user intervention pauses routing and updates the state block.
 7. Confirm duplicate or late participant replies do not reopen completed turns.
-8. In strict-mention rooms, confirm `/meeting` setup can be approved with `@<moderator> 시작`; if an approval bridge is installed, also test bare `시작`.
+8. In strict-mention rooms, confirm `/meeting` setup can be approved with `@<moderator> 시작` and that later `@<moderator> ...` messages continue the same meeting session when a follow-up bridge is installed.
 9. Enable voice only after the text meeting passes:
 
 ```text
