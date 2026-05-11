@@ -183,7 +183,7 @@ Read `references/meeting-ground-rules.md` before generating channel prompts or t
 Ensure the generated moderator and participant prompts enforce:
 
 - Setup gate before participant mentions
-- Slack strict-mention approval guidance: `@<moderator> 시작` by default, or bare `시작` only when a gateway approval bridge is installed
+- Slack strict-mention follow-up guidance: after `/meeting`, continue with `@<moderator> ...` in the same channel; the gateway should route it to the existing meeting session
 - Moderator-only turn assignment
 - Sequential, parallel, directed, and mixed mode rules
 - Compact state block updates
