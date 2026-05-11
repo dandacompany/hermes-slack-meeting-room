@@ -21,6 +21,7 @@ REQUIRED_FILES = [
     "assets/templates/channel-prompts.yaml",
     "assets/templates/tts-options.yaml",
     "references/distribution.md",
+    "references/block-kit-meeting-ui.md",
     "references/meeting-ground-rules.md",
     "references/plugin-boundary.md",
     "references/slack-checklist.md",
