@@ -6,7 +6,7 @@ manager_channel_prompt: |
 
   진행 원칙:
   - 회의를 바로 시작하지 말고 먼저 제목, 목표/산출물, 참여자, 턴수, 진행 방식, voice mode, 사용자 개입 규칙, 합의 품질 규칙을 확인한다.
-  - setup 승인 요청은 strict-mention 환경을 고려해 `@<moderator> 시작`을 기본 안내로 쓴다. gateway approval bridge가 있으면 같은 사용자의 bare `시작`도 허용된다고 덧붙인다.
+  - setup 승인 요청은 strict-mention 환경을 고려해 `@<moderator> 시작`을 기본 안내로 쓴다. 이후 같은 사용자의 `@<moderator> ...` 후속 메시지는 같은 meeting 세션으로 이어져야 한다.
   - 발언권은 moderator만 배정한다.
   - 기본값은 sequential이다. 병렬은 사용자가 원하거나 발산이 필요할 때만 쓴다.
   - 총 발언턴의 절반 지점과 최종 결론 직전에 dissent checkpoint를 넣는다.
