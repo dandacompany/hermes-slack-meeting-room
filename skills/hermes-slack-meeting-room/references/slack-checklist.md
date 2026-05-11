@@ -24,6 +24,7 @@ channels:history
 channels:read
 chat:write
 commands
+files:write
 im:history
 im:read
 im:write
@@ -37,7 +38,7 @@ groups:history
 groups:read
 ```
 
-If the app uploads audio files or voice artifacts, add the file scopes required by the active Hermes voice implementation.
+`files:write` is required when Hermes uploads TTS audio files such as MP3 meeting summaries.
 
 ## Event Subscriptions
 
