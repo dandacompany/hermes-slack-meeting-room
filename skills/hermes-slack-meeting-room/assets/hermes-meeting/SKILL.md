@@ -47,7 +47,7 @@ Slack Block Kit `/meeting` UI가 설치된 환경에서는 사용자가 UI의 `�
 Only start when the user clearly approves.
 If a message arrives through the dedicated `/meeting` UI session after a setup draft, treat it as continuation of the pending meeting session. If the message is an approval such as `시작`, start the meeting from the existing state. Do not treat normal `@<moderator> ...` Slack mentions as meeting continuation when Block Kit meeting UI is installed.
 
-If routing control is `auto`, immediately route the next turn by mentioning the exact Slack profile mention, not just the display name. If routing control is `manual`, do not mention the next participant automatically; wait until the user selects the next speaker in the `/meeting` UI.
+If routing control is `auto`, immediately route one next speaker. If routing control is `manual`, do not route the next participant automatically; wait until the user selects the next speaker in the `/meeting` UI.
 
 ## State
 
@@ -74,19 +74,20 @@ Only substantive participant replies and final moderator synthesis count as turn
 
 Only the moderator assigns speaking turns. If the user speaks, pause routing and classify the intervention before mentioning another participant.
 
-Slack strict-mention rule:
+Slack routing rule:
 
-- Every routed turn must start with the exact Slack mention for the selected profile, such as `<@GRACE_BOT_USER_ID> Grace, 1턴입니다.`
-- Participant names without Slack mentions do not call the app and must not be used as the only routing signal.
+- Every routed turn must target only one selected profile.
+- Use the visible profile name in routing text, such as `Grace 1턴입니다.` The gateway may convert that line to the real Slack mention internally.
+- Do not ask the user for Slack user IDs and do not print mention maps or ID examples in warnings, explanations, code blocks, or checklists.
 - Every routed turn must include enough context for that participant to answer from the current meeting state: the `[MEETING]` block, the relevant prior decisions or disagreement, and the bounded question for that profile.
-- In sequential handoff, participants use `handoff: <@MODERATOR_USER_ID>`, not `handoff: Bryan`.
+- In sequential handoff, participants use `handoff: Bryan`.
 
 Sequential mode:
 
 - Mention exactly one participant.
 - Participant substantive replies count as turns.
 - Moderator routing messages do not count as turns.
-- Participants hand back with `handoff: <@MODERATOR_USER_ID>`.
+- Participants hand back with `handoff: Bryan`.
 - Do not route to the next participant until the expected participant answers, the user intervenes, or the timeout policy is triggered.
 
 Parallel mode:

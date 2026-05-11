@@ -72,10 +72,11 @@ Routing and metadata do not count as meeting turns. Only substantive participant
 
 - Only the moderator assigns speaking turns.
 - In sequential and directed mode, the moderator mentions exactly one participant.
-- In parallel mode, the moderator mentions the selected participants once in the same message.
+- In this Slack meeting-room setup, prefer one routed participant per message. Avoid parallel mode unless the gateway explicitly supports safe fan-out.
 - In auto routing, the moderator immediately posts the next participant mention after the current turn is ready.
 - In manual routing, the moderator waits for the `/meeting` UI next-speaker button and does not auto-mention participants.
-- A participant route must use the exact Slack mention, for example `<@GRACE_BOT_USER_ID> Grace, 1턴입니다.` Profile names alone do not call strict-mention Slack apps.
+- A participant route should use the visible profile name, for example `Grace 1턴입니다.` The gateway may convert that single routing line to the real Slack mention internally.
+- Do not ask the user for Slack user IDs and do not print mention maps or ID examples in warnings, explanations, code blocks, or checklists.
 - Each participant route must include enough context to answer: current `[MEETING]` state, prior key points or decisions, and the specific question for that profile.
 - Participants never mention other participant apps.
 - Participants mention only the moderator in `handoff`, and only when sequential or directed mode requires it.
@@ -89,7 +90,7 @@ Use sequential mode as the default.
 1. moderator selects one participant.
 2. moderator asks one bounded question.
 3. The selected participant answers once.
-4. The participant ends with `handoff: <@MODERATOR_USER_ID>`.
+4. The participant ends with `handoff: Bryan`.
 5. moderator updates state and chooses the next action.
 
 Do not assign the next participant until the expected participant has answered, the user intervenes, or the timeout policy is triggered.

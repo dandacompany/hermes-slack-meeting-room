@@ -61,7 +61,7 @@ New meeting modal fields:
 - Participants as a multi-select
 - Turn count
 - Mode: `mixed`, `sequential`, `parallel`, `directed`
-- Routing control: `auto` immediately mentions the next profile; `manual` waits for a user-selected next-speaker button
+- Routing control: `auto` immediately routes the next profile; `manual` waits for a user-selected next-speaker button
 - Voice mode: `voice-summary`, `text-only`, `voice-full`, `hybrid`
 
 Existing meeting actions:
@@ -87,7 +87,7 @@ When the UI creates a meeting, dispatch a command-style event to Hermes:
 ```
 
 The moderator must not instruct the user to continue via normal `@moderator` messages when the UI is installed.
-In auto routing, the moderator must immediately call the next participant using the exact Slack mention. In manual routing, the moderator must wait for the UI next-speaker action and must not auto-mention participants.
+In auto routing, the moderator must immediately call exactly one next participant. In manual routing, the moderator must wait for the UI next-speaker action and must not auto-route participants.
 
 ## Slack Requirements
 
@@ -110,7 +110,6 @@ SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<GRACE_BOT_USER_ID>,
 SLACK_ALLOW_BOTS=mentions
 SLACK_REQUIRE_MENTION=true
 SLACK_STRICT_MENTION=true
-SLACK_MEETING_MENTION_MAP=Bryan:U...,Grace:U...,Mike:U...,Sunny:U...
 SLACK_INJECT_BOT_MENTION_CONTEXT=true
 ```
 
@@ -119,6 +118,7 @@ Rules:
 - Include every profile app's Slack bot user id, not just the human user's id.
 - Keep `SLACK_ALLOW_BOTS=mentions`; do not use `all` for meeting rooms unless you intentionally want broad bot-message ingestion.
 - Participants still answer only when the moderator explicitly mentions them.
-- If a moderator writes `Grace` instead of `<@GRACE_BOT_USER_ID> Grace`, the gateway should rewrite the routed meeting message before sending where possible.
+- If a moderator writes `Grace 1턴입니다.`, the gateway may rewrite that single routed line to the real Slack mention before sending.
+- Do not print Slack user IDs or mention maps in user-visible warnings or setup messages.
 - Profiles should receive recent meeting context on top-level bot-to-bot mentions so they can answer from the actual conversation, not only from the latest prompt.
 - Normal unmentioned bot chatter remains ignored.
