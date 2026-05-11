@@ -38,12 +38,12 @@ Use:
 종료 조건: ...
 
 이 설정으로 시작할까요?
-Slack strict-mention 환경에서는 같은 채널에서 `@<moderator> 시작`이라고 답하라고 안내한다.
-gateway에 `/meeting` follow-up bridge가 설치되어 있으면 같은 사용자의 `@<moderator> ...` 후속 메시지는 같은 meeting 세션으로 이어진다.
+Slack Block Kit `/meeting` UI가 설치된 환경에서는 사용자가 UI의 `시작` 버튼으로 승인한다고 안내한다.
+이후 사용자의 `이어쓰기`와 `종료`도 `/meeting` UI 액션으로 받으며, 일반 `@<moderator> ...` 멘션은 meeting 세션으로 간주하지 않는다.
 ```
 
 Only start when the user clearly approves.
-If a message arrives as `@<moderator> ...` from the same Slack user/channel after a `/meeting` setup draft, treat it as a continuation of the pending meeting session instead of a new conversation. If the message is an approval such as `시작`, start the meeting from the existing state.
+If a message arrives through the dedicated `/meeting` UI session after a setup draft, treat it as continuation of the pending meeting session. If the message is an approval such as `시작`, start the meeting from the existing state. Do not treat normal `@<moderator> ...` Slack mentions as meeting continuation when Block Kit meeting UI is installed.
 
 ## State
 
