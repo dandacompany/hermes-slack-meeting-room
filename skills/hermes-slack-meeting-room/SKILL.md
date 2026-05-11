@@ -173,6 +173,7 @@ For each profile-specific Slack app, guide the user through:
 - Reinstall to workspace
 - Token placement in the correct profile `.env`
 - App invitation to the meeting channel
+- Bot-to-bot routing for meetings: every profile's allowlist must include the human operator and all meeting bot user IDs, with `SLACK_ALLOW_BOTS=mentions`
 
 Register `/meeting` only on the moderator app by default.
 
