@@ -62,8 +62,8 @@ Likely causes:
 Fix:
 
 - In the moderator prompt, ask for `@<moderator> 시작` in the same channel/thread.
-- Prefer a gateway `/meeting` approval bridge that remembers the same `(channel_id, user_id)` for a short TTL and accepts bare `시작`, `start`, `go`, `진행`, or `승인` as continuation.
-- If no bridge exists, do not tell the user that plain `시작` is sufficient in strict-mention rooms.
+- Prefer a gateway `/meeting` follow-up bridge that remembers the same `(channel_id, user_id)` for a short TTL and routes subsequent `@<moderator> ...` messages into the slash-created meeting session.
+- If no bridge exists, do not imply that a top-level `@<moderator> ...` message will preserve context; ask the user to reply in the same Slack thread or use another session-preserving mechanism.
 
 ## Every profile answers at once
 
