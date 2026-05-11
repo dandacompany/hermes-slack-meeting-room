@@ -15,8 +15,8 @@ The moderator must not mention participants until the user approves the setup dr
 In Slack strict-mention rooms, the setup draft must tell the user how to approve without losing context:
 
 - Safest default: reply in the same channel or thread with `@<moderator> 시작`.
-- If the gateway has a `/meeting` approval bridge, the same user may also reply with bare `시작`, `start`, `go`, `진행`, or `승인` in the same channel.
-- Treat that approval as continuation of the pending `/meeting` setup, not as a new conversation.
+- If the gateway has a `/meeting` follow-up bridge, the same user may continue with `@<moderator> ...` in the same channel and the message must route to the existing meeting session.
+- Treat that follow-up as continuation of the pending `/meeting` setup, not as a new conversation.
 - Do not route participants until this approval is received.
 
 Required setup fields:
@@ -161,7 +161,7 @@ Do not let the meeting collapse into agreement too early.
 - Follow the configured Slack surface. If the meeting started in a thread, stay in that thread. If it started in the channel root, keep routing in the channel root.
 - Do not split one meeting across multiple channels or DMs.
 - If a profile is not a channel member, stop and ask the user to invite it instead of continuing with a hidden participant.
-- Slash-command setup replies may be ephemeral. If so, the gateway must preserve a pending approval context or the moderator must require `@<moderator> 시작` in the same Slack surface.
+- Slash-command setup replies may be ephemeral. If so, the gateway must preserve a channel/user meeting context so `@<moderator> ...` in the same Slack surface continues the meeting session.
 
 ## TTS Rules
 
