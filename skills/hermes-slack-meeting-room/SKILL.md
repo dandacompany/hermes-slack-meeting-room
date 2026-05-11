@@ -128,6 +128,7 @@ tts:
 ```
 
 Use Typecast or ElevenLabs only after text meeting flow passes.
+For Slack meeting rooms, prefer MP3 file uploads by default. If a custom command TTS provider is used, set `output_format: mp3` and keep `voice_compatible: false` unless the target platform explicitly needs Opus/OGG voice bubbles.
 
 When a selected provider requires an API key, token, voice ID, or account-specific setting, do not ask the user to paste the secret into chat. Instead:
 
@@ -182,6 +183,7 @@ Read `references/meeting-ground-rules.md` before generating channel prompts or t
 Ensure the generated moderator and participant prompts enforce:
 
 - Setup gate before participant mentions
+- Slack strict-mention approval guidance: `@<moderator> 시작` by default, or bare `시작` only when a gateway approval bridge is installed
 - Moderator-only turn assignment
 - Sequential, parallel, directed, and mixed mode rules
 - Compact state block updates
@@ -253,13 +255,14 @@ Test in a dedicated Slack channel first.
 5. Confirm sequential handoff works.
 6. Confirm user intervention pauses routing and updates the state block.
 7. Confirm duplicate or late participant replies do not reopen completed turns.
-8. Enable voice only after the text meeting passes:
+8. In strict-mention rooms, confirm `/meeting` setup can be approved with `@<moderator> 시작`; if an approval bridge is installed, also test bare `시작`.
+9. Enable voice only after the text meeting passes:
 
 ```text
 /meeting 테스트 회의, 3턴, voice-summary
 ```
-
-9. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
+10. Confirm Slack uploads MP3 audio for voice replies unless the user explicitly configured an Opus/OGG voice-bubble workflow.
+11. Confirm TTS does not speak metadata such as `[MEETING]`, `handoff:`, `round`, `next`, or participant mentions.
 
 ## Troubleshooting
 
