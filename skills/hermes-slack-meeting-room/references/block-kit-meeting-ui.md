@@ -94,3 +94,21 @@ The moderator Slack app must have:
 - Channel membership in the meeting channel
 
 Block Kit button and modal callbacks should use action ids and callback ids prefixed with `hermes_meeting_`.
+
+## Bot-To-Bot Routing
+
+Multi-profile meetings require bot-to-bot messages only for explicit moderator routing. Configure every profile environment with:
+
+```bash
+SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<GRACE_BOT_USER_ID>,<MIKE_BOT_USER_ID>,<SUNNY_BOT_USER_ID>
+SLACK_ALLOW_BOTS=mentions
+SLACK_REQUIRE_MENTION=true
+SLACK_STRICT_MENTION=true
+```
+
+Rules:
+
+- Include every profile app's Slack bot user id, not just the human user's id.
+- Keep `SLACK_ALLOW_BOTS=mentions`; do not use `all` for meeting rooms unless you intentionally want broad bot-message ingestion.
+- Participants still answer only when the moderator explicitly mentions them.
+- Normal unmentioned bot chatter remains ignored.
