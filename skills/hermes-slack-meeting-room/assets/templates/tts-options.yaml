@@ -33,8 +33,11 @@ typecast_optional:
       provider: typecast
       providers:
         typecast:
+          type: command
           voice: "<TYPECAST_VOICE_ID>"
           voice_name: "<VOICE_NAME>"
+          output_format: mp3
+          voice_compatible: false
 
 elevenlabs_optional:
   label: "ElevenLabs"
@@ -51,6 +54,8 @@ elevenlabs_optional:
           voice: "<ELEVENLABS_VOICE_ID>"
           voice_name: "<VOICE_NAME>"
           model: "<ELEVENLABS_MODEL_OR_DEFAULT>"
+          output_format: mp3
+          voice_compatible: false
 
 voice_modes:
   text-only: "No TTS. Use for first meeting tests."
