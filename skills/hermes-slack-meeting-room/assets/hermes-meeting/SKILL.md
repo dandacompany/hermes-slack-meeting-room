@@ -38,9 +38,12 @@ Use:
 종료 조건: ...
 
 이 설정으로 시작할까요?
+Slack strict-mention 환경에서는 같은 채널에서 `@<moderator> 시작`이라고 답하라고 안내한다.
+gateway에 `/meeting` approval bridge가 설치되어 있으면 같은 사용자의 bare `시작`도 허용된다.
 ```
 
 Only start when the user clearly approves.
+If the approval arrives as `시작`, `start`, `go`, `진행`, or `승인` from the same Slack user/channel after a `/meeting` setup draft, treat it as approval for the pending meeting instead of a new conversation.
 
 ## State
 
@@ -136,6 +139,11 @@ Then:
 - `voice-summary`: participant adds one final `음성 요약:` sentence.
 - `voice-full`: participant writes 2-4 natural spoken Korean sentences.
 - `hybrid`: moderator states which turns are spoken.
+
+For any voice mode except `text-only`, wrap the exact speakable Korean in `[TTS]...[/TTS]`.
+Use `[TTS]` for only the summary sentence in `voice-summary`, and for only the spoken answer in `voice-full`.
+Keep routing state, Slack mentions, handoff markers, and control metadata outside `[TTS]`.
+For Slack file uploads, prefer MP3 output by default. Do not configure command TTS as `voice_compatible: true` unless the target platform explicitly requires Opus voice bubbles, because that setting can convert MP3 into OGG.
 
 TTS must speak only meeting content. Do not speak:
 
