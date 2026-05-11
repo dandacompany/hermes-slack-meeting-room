@@ -79,8 +79,19 @@ Place tokens only in profile-specific `.env` files. Never paste tokens into chat
 SLACK_BOT_TOKEN=xoxb-...
 SLACK_APP_TOKEN=xapp-...
 SLACK_ALLOWED_USERS=<SLACK_USER_ID_1>,<SLACK_USER_ID_2>
+SLACK_ALLOW_BOTS=mentions
 SLACK_HOME_CHANNEL=<OPTIONAL_HOME_CHANNEL_ID>
 ```
+
+For multi-profile meetings, include every meeting bot's Slack user id in every profile's `SLACK_ALLOWED_USERS`.
+Example shape:
+
+```bash
+SLACK_ALLOWED_USERS=<HUMAN_USER_ID>,<MODERATOR_BOT_USER_ID>,<GRACE_BOT_USER_ID>,<MIKE_BOT_USER_ID>,<SUNNY_BOT_USER_ID>
+SLACK_ALLOW_BOTS=mentions
+```
+
+This does not allow arbitrary bot chatter. With `SLACK_ALLOW_BOTS=mentions`, a profile only processes bot messages that explicitly mention that profile, which is required for moderator-to-participant routing.
 
 Use the same rule for TTS provider credentials. Open the profile `.env` file locally and let the user paste and save secrets there:
 
